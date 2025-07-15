@@ -1,0 +1,10 @@
+app:
+  host: 127.0.0.1
+  port: 8080
+mysql:
+  host: 127.0.0.1
+  port: 3306
+  database: test
+  username: "root"
+  password: "123456"
+  debug: true
