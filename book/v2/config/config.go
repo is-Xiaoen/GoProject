@@ -1,5 +1,7 @@
 package config
 
+import "github.com/infraboard/mcube/v2/tools/pretty"
+
 func Default() *Config {
 	return &Config{
 		Application: &application{
@@ -9,7 +11,7 @@ func Default() *Config {
 		MySQL: &mySQL{
 			Host:     "127.0.0.1",
 			Port:     3306,
-			DB:       "test",
+			DB:       "go",
 			Username: "root",
 			Password: "123456",
 			Debug:    true,
@@ -23,6 +25,10 @@ func Default() *Config {
 type Config struct {
 	Application *application `toml:"app" yaml:"app" json:"app"`
 	MySQL       *mySQL       `toml:"mysql" yaml:"mysql" json:"mysql"`
+}
+
+func (c *Config) String() string {
+	return pretty.ToJSON(c)
 }
 
 // 应用服务

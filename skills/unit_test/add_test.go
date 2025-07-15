@@ -30,5 +30,4 @@ func TestAdd(t *testing.T) {
 	//专门的断言库
 	should := assert.New(t)
 	should.Equal(3, unittest.Add(1, 2))
-
 }
