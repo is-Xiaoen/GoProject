@@ -12,7 +12,7 @@ import (
 )
 
 func TestGetBook(t *testing.T) {
-	book, err := controllers.Book.GetBook(context.Background(), controllers.NewGetBookRequest(3))
+	book, err := controllers.Book.GetBook(context.Background(), controllers.NewGetBookRequest(1))
 	if err != nil {
 		t.Fatal(err)
 	}

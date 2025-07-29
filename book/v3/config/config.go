@@ -34,7 +34,7 @@ func Default() *Config {
 	}
 }
 
-// 这歌对象就是程序配置
+// 这个对象就是程序配置
 // yaml, toml
 type Config struct {
 	Application *application `toml:"app" yaml:"app" json:"app"`

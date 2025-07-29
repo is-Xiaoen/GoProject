@@ -9,7 +9,7 @@ import (
 )
 
 func TestLoadConfigFromYaml(t *testing.T) {
-	err := config.LoadConfigFromYaml(fmt.Sprintf("%s/book/v2/application.yaml", os.Getenv("workspaceFolder")))
+	err := config.LoadConfigFromYaml(fmt.Sprintf("%s/book/v3/application.yaml", os.Getenv("workspaceFolder")))
 	if err != nil {
 		t.Fatal(err)
 	}
