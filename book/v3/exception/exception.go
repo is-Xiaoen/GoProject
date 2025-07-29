@@ -2,6 +2,7 @@ package exception
 
 import (
 	"errors"
+
 	"github.com/infraboard/mcube/v2/tools/pretty"
 )
 
@@ -12,7 +13,7 @@ func NewApiException(code int, message string) *ApiException {
 	}
 }
 
-// ApiException 用于描述业务异常
+// 用于描述业务异常
 // 实现自定义异常
 // return error
 type ApiException struct {
@@ -48,7 +49,7 @@ func (e *ApiException) WithHttpCode(httpCode int) *ApiException {
 	return e
 }
 
-// IsApiException 通过 Code 来比较错误
+// 通过 Code 来比较错误
 func IsApiException(err error, code int) bool {
 	var apiErr *ApiException
 	if errors.As(err, &apiErr) {

@@ -1,13 +1,13 @@
 package handlers
 
 import (
-	"net/http"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/is-Xiaoen/GoProject/book/v3/config"
 	"github.com/is-Xiaoen/GoProject/book/v3/controllers"
 	"github.com/is-Xiaoen/GoProject/book/v3/models"
+	"github.com/is-Xiaoen/GoProject/book/v3/response"
 )
 
 var Book = &BookApiHandler{}
@@ -45,7 +45,7 @@ func (h *BookApiHandler) listBook(ctx *gin.Context) {
 	if pageNumber != "" {
 		pnInt, err := strconv.ParseInt(pageNumber, 10, 64)
 		if err != nil {
-			ctx.JSON(400, gin.H{"code": 400, "message": err.Error()})
+			response.Failed(ctx, err)
 			return
 		}
 		pn = int(pnInt)
@@ -55,7 +55,7 @@ func (h *BookApiHandler) listBook(ctx *gin.Context) {
 	if pageSize != "" {
 		psInt, err := strconv.ParseInt(pageSize, 10, 64)
 		if err != nil {
-			ctx.JSON(400, gin.H{"code": 400, "message": err.Error()})
+			response.Failed(ctx, err)
 			return
 		}
 		ps = int(psInt)
@@ -79,12 +79,12 @@ func (h *BookApiHandler) listBook(ctx *gin.Context) {
 	// 4  offset 3 * 20, 20
 	offset := (pn - 1) * ps
 	if err := query.Count(&set.Total).Offset(int(offset)).Limit(int(ps)).Find(&set.Items).Error; err != nil {
-		ctx.JSON(500, gin.H{"code": 500, "message": err.Error()})
+		response.Failed(ctx, err)
 		return
 	}
 
 	// 获取总数, 总共多少个, 总共有多少页
-	ctx.JSON(200, set)
+	response.OK(ctx, set)
 }
 
 func (h *BookApiHandler) createBook(ctx *gin.Context) {
@@ -110,41 +110,41 @@ func (h *BookApiHandler) createBook(ctx *gin.Context) {
 	// 获取到bookInstance
 	// 参数是不是为空
 	if err := ctx.BindJSON(bookSpecInstance); err != nil {
-		ctx.JSON(400, gin.H{"code": 400, "message": err.Error()})
+		response.Failed(ctx, err)
 		return
 	}
 
 	book, err := controllers.Book.CreateBook(ctx.Request.Context(), bookSpecInstance)
 	if err != nil {
-		ctx.JSON(400, gin.H{"code": 400, "message": err.Error()})
+		response.Failed(ctx, err)
 		return
 	}
 
 	// 返回响应
-	ctx.JSON(http.StatusCreated, book)
+	response.OK(ctx, book)
 }
 
 func (h *BookApiHandler) getBook(ctx *gin.Context) {
 	bnInt, err := strconv.ParseInt(ctx.Param("bn"), 10, 64)
 	if err != nil {
-		ctx.JSON(400, gin.H{"code": 400, "message": err.Error()})
+		response.Failed(ctx, err)
 		return
 	}
 
 	book, err := controllers.Book.GetBook(ctx, controllers.NewGetBookRequest(int(bnInt)))
 	if err != nil {
-		ctx.JSON(400, gin.H{"code": 400, "message": err.Error()})
+		response.Failed(ctx, err)
 		return
 	}
 
-	ctx.JSON(200, book)
+	response.OK(ctx, book)
 }
 
 func (h *BookApiHandler) updateBook(ctx *gin.Context) {
 	bnStr := ctx.Param("bn")
 	bn, err := strconv.ParseInt(bnStr, 10, 64)
 	if err != nil {
-		ctx.JSON(400, gin.H{"code": 400, "message": err.Error()})
+		response.Failed(ctx, err)
 		return
 	}
 
@@ -154,22 +154,23 @@ func (h *BookApiHandler) updateBook(ctx *gin.Context) {
 	}
 	// 获取到bookInstance
 	if err := ctx.BindJSON(&bookInstance.BookSpec); err != nil {
-		ctx.JSON(400, gin.H{"code": 400, "message": err.Error()})
+		response.Failed(ctx, err)
 		return
 	}
 
 	if err := config.DB().Where("id = ?", bookInstance.Id).Updates(bookInstance).Error; err != nil {
-		ctx.JSON(400, gin.H{"code": 400, "message": err.Error()})
+		response.Failed(ctx, err)
 		return
 	}
 
-	ctx.JSON(200, bookInstance)
+	response.OK(ctx, bookInstance)
 }
 
 func (h *BookApiHandler) deleteBook(ctx *gin.Context) {
 	if err := config.DB().Where("id = ?", ctx.Param("bn")).Delete(&models.Book{}).Error; err != nil {
-		ctx.JSON(400, gin.H{"code": 400, "message": err.Error()})
+		response.Failed(ctx, err)
 		return
 	}
-	ctx.JSON(http.StatusNoContent, "ok")
+
+	response.OK(ctx, "ok")
 }

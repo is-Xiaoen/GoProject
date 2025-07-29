@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/is-Xiaoen/GoProject/book/v3/exception"
 	"os"
 
 	"github.com/gin-gonic/gin"
@@ -17,7 +18,8 @@ func main() {
 	}
 	config.LoadConfigFromYaml(path)
 
-	server := gin.Default()
+	server := gin.New()
+	server.Use(gin.Logger(), exception.Recovery())
 
 	handlers.Book.Registry(server)
 
