@@ -2,7 +2,7 @@ package config_test
 
 import (
 	"fmt"
-	"github.com/is-Xiaoen/GoProject/book/v2/config"
+	"github.com/is-Xiaoen/GoProject/book/v3/config"
 	"os"
 	"testing"
 )
