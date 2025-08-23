@@ -3,6 +3,8 @@ package book
 import (
 	"context"
 
+	"github.com/infraboard/mcube/v2/http/request"
+	"github.com/infraboard/mcube/v2/ioc/config/validator"
 	"github.com/infraboard/mcube/v2/types"
 )
 
@@ -13,8 +15,24 @@ type Service interface {
 	// 2. Book列表查询
 	QueryBook(context.Context, *QueryBookRequest) (*types.Set[*Book], error)
 	// 3. Book详情查询
+	DescribeBook(context.Context, *DescribeBookRequest) (*Book, error)
 	// 4. Book更新
+	UpdateBook(context.Context, *UpdateBookRequest) (*Book, error)
 	// 5. Book删除
+	DeleteBook(context.Context, *DeleteBookRequest) error
+}
+
+type DeleteBookRequest struct {
+	DescribeBookRequest
+}
+
+type UpdateBookRequest struct {
+	DescribeBookRequest
+	CreateBookRequest
+}
+
+type DescribeBookRequest struct {
+	Id uint
 }
 
 type BookSet struct {
@@ -39,6 +57,10 @@ func (b *BookSet) Add(item *Book) {
 // 	b.Items = append(b.Items, item)
 // }
 
+func NewCreateBookRequest() *CreateBookRequest {
+	return (&CreateBookRequest{}).SetIsSale(false)
+}
+
 type CreateBookRequest struct {
 	// type 用于要使用gorm 来自动创建和更新表的时候 才需要定义
 	Title  string  `json:"title"  gorm:"column:title;type:varchar(200)" validate:"required"`
@@ -49,5 +71,29 @@ type CreateBookRequest struct {
 	IsSale *bool `json:"is_sale"  gorm:"column:is_sale"`
 }
 
+// 这个请求对象的教育
+func (r *CreateBookRequest) Validate() error {
+	// validate := validator.New()
+	// validate.Struct(r)
+	return validator.Validate(r)
+}
+
+func (r *CreateBookRequest) SetIsSale(v bool) *CreateBookRequest {
+	r.IsSale = &v
+	return r
+}
+
+func NewQueryBookRequest() *QueryBookRequest {
+	return &QueryBookRequest{
+		// PageRequest{PageSize:20, PageNumber: 1}
+		PageRequest: *request.NewDefaultPageRequest(),
+	}
+}
+
 type QueryBookRequest struct {
+	// PageSize   uint
+	// PageNumber uint
+	request.PageRequest
+	// 关键字参数
+	Keywords string `json:"keywords"`
 }
