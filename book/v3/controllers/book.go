@@ -26,7 +26,7 @@ type GetBookRequest struct {
 	// ...
 }
 
-// 核心功能
+// GetBook 核心功能
 // ctx: Trace, 支持请求的取消, request_id
 // GetBookRequest 为什么要把他封装为1个对象, GetBook(ctx context.Context, BookNumber string), 保证你的接口的签名的兼容性
 // BookController.GetBook(, "")
@@ -66,4 +66,15 @@ func (c *BookController) CreateBook(ctx context.Context, in *models.BookSpec) (*
 	}
 
 	return bookInstance, nil
+}
+
+func (c *BookController) UpdateBook() {
+	// update(obj)
+	// config.DB().Updates()
+}
+
+func (c *BookController) update(ctx context.Context, obj models.Book) error {
+	// obj.UpdateTime = now()
+	// config.DB().Updates()
+	return nil
 }

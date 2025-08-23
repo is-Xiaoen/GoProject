@@ -10,6 +10,7 @@ import (
 // 2. 正常直接返回数据, Restful接口 怎么知道这些请求是成功还是失败喃? 通过HTTP判断 2xx
 // 如果后面 所有的返回数据 要进过特殊处理，都在这个函数内进行扩展，方便维护，比如 数据脱敏
 func OK(ctx *gin.Context, data any) {
+	// v, ok := data.(Densener)
 	ctx.JSON(200, data)
 	ctx.Abort()
 }
