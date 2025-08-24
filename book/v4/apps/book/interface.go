@@ -4,8 +4,17 @@ import (
 	"context"
 
 	"github.com/infraboard/mcube/v2/http/request"
+	"github.com/infraboard/mcube/v2/ioc"
 	"github.com/infraboard/mcube/v2/ioc/config/validator"
 	"github.com/infraboard/mcube/v2/types"
+)
+
+func GetService() Service {
+	return ioc.Controller().Get(APP_NAME).(Service)
+}
+
+const (
+	APP_NAME = "book"
 )
 
 // book.Service, Book的业务定义
