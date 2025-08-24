@@ -1,3 +1,9 @@
+[app]
+name = "simple_api"
+description = "app desc"
+address = "localhost"
+encrypt_key = "defualt app encrypt key"
+
 [datasource]
 provider = "mysql"
 host = "127.0.0.1"
@@ -7,3 +13,8 @@ username = "root"
 password = "123456"
 auto_migrate = false
 debug = false
+
+[http]
+host = "127.0.0.1"
+port = 8010
+path_prefix = "api"
