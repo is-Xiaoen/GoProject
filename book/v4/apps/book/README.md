@@ -34,27 +34,27 @@ DeleteBook(context.Context, *DeleteBookRequest) error
 ```go
 // CreateBook implements book.Service.
 func (b *BookServiceImpl) CreateBook(context.Context, *book.CreateBookRequest) (*book.Book, error) {
-panic("unimplemented")
+	panic("unimplemented")
 }
 
 // DeleteBook implements book.Service.
 func (b *BookServiceImpl) DeleteBook(context.Context, *book.DeleteBookRequest) error {
-panic("unimplemented")
+	panic("unimplemented")
 }
 
 // DescribeBook implements book.Service.
 func (b *BookServiceImpl) DescribeBook(context.Context, *book.DescribeBookRequest) (*book.Book, error) {
-panic("unimplemented")
+	panic("unimplemented")
 }
 
 // QueryBook implements book.Service.
 func (b *BookServiceImpl) QueryBook(context.Context, *book.QueryBookRequest) (*types.Set[*book.Book], error) {
-panic("unimplemented")
+	panic("unimplemented")
 }
 
 // UpdateBook implements book.Service.
 func (b *BookServiceImpl) UpdateBook(context.Context, *book.UpdateBookRequest) (*book.Book, error) {
-panic("unimplemented")
+	panic("unimplemented")
 }
 ```
 
@@ -140,4 +140,183 @@ func (c *CommentServiceImpl) AddComment(ctx context.Context, in *comment.AddComm
 2. (API)对外提供 HTTP接口, RESTful接口
 3. (API)对内提供 RPC接口(JSON RPC/GRPC/thrift)
 
+1. 开发业务功能
+```go
+func (h *BookApiHandler) createBook(ctx *gin.Context) {
+	req := book.NewCreateBookRequest()
+	if err := ctx.BindJSON(req); err != nil {
+		response.Failed(ctx, err)
+		return
+	}
 
+	ins, err := h.svc.CreateBook(ctx.Request.Context(), req)
+	if err != nil {
+		response.Failed(ctx, err)
+		return
+	}
+
+	// 返回响应
+	response.Success(ctx, ins)
+}
+```
+
+2. 注册路由
+```go
+type BookApiHandler struct {
+	ioc.ObjectImpl
+
+	// 业务依赖
+	svc book.Service
+}
+
+func (h *BookApiHandler) Name() string {
+	return "books"
+}
+
+// 对象的初始化, 初始化对象的一些熟悉 &BookApiHandler{}
+// 构造函数
+// 当你这个对象初始化的时候，直接把的处理函数(ApiHandler注册给Server)
+func (h *BookApiHandler) Init() error {
+	h.svc = book.GetService()
+	r := ioc_gin.ObjectRouter(h)
+
+	r.GET("", h.queryBook)
+	r.POST("", h.createBook)
+	return nil
+}
+
+func init() {
+	ioc.Api().Registry(&BookApiHandler{})
+}
+```
+
+## 业务注册
+
+每写完一个业务，就需要在 注册到ioc(注册表)
+```go
+// 业务加载区, 选择性的价值的业务处理对象
+
+import (
+	// Api Impl
+	_ "122.51.31.227/go-course/go18/book/v4/apps/book/api"
+
+	// Service Impl
+	_ "122.51.31.227/go-course/go18/book/v4/apps/book/impl"
+	_ "122.51.31.227/go-course/go18/book/v4/apps/comment/impl"
+)
+```
+
+
+## 启动服务
+
+```go
+import (
+	"github.com/infraboard/mcube/v2/ioc/server/cmd"
+
+	// 业务对象
+	_ "122.51.31.227/go-course/go18/book/v4/apps"
+)
+
+func main() {
+	// ioc框架 加载对象, 注入对象, 配置对象
+	// server.Gin.Run()
+	// application.Get().AppName
+	// http.Get().Host
+	// server.DefaultConfig.ConfigFile.Enabled = true
+	// server.DefaultConfig.ConfigFile.Path = "application.toml"
+	// server.Run(context.Background())
+	// 不能指定配置文件逻辑
+	// 使用者来说，体验不佳
+
+	// ioc 直接提供server, 直接run就行了，
+	// mcube 包含 一个 gin Engine
+	// CLI, start 指令 -f 指定配置文件
+	cmd.Start()
+}
+```
+
+```toml
+[app]
+  name = "simple_api"
+  description = "app desc"
+  address = "localhost"
+  encrypt_key = "defualt app encrypt key"
+
+[datasource]
+  provider = "mysql"
+  host = "127.0.0.1"
+  port = 3306
+  database = "go18"
+  username = "root"
+  password = "123456"
+  auto_migrate = false
+  debug = false
+
+[http]
+  host = "127.0.0.1"
+  port = 8010
+  path_prefix = "api"
+
+[comment]
+  max_comment_per_book = 200
+```
+
+```sh
+➜  v4 git:(main) ✗ go run main.go -f application.toml start
+[GIN-debug] [WARNING] Creating an Engine instance with the Logger and Recovery middleware already attached.
+
+[GIN-debug] [WARNING] Running in "debug" mode. Switch to "release" mode in production.
+ - using env:   export GIN_MODE=release
+ - using code:  gin.SetMode(gin.ReleaseMode)
+
+2025-05-25T15:59:33+08:00 INFO   config/gin/framework.go:41 > enable gin recovery component:GIN_WEBFRAMEWORK
+200
+[GIN-debug] GET    /api/simple_api/v1/books  --> 122.51.31.227/go-course/go18/book/v4/apps/book/api.(*BookApiHandler).queryBook-fm (4 handlers)
+[GIN-debug] POST   /api/simple_api/v1/books  --> 122.51.31.227/go-course/go18/book/v4/apps/book/api.(*BookApiHandler).createBook-fm (4 handlers)
+2025-05-25T15:59:33+08:00 INFO   ioc/server/server.go:74 > loaded configs: [app.v1 trace.v1 log.v1 validator.v1 gin_webframework.v1 datasource.v1 grpc.v1 http.v1] component:SERVER
+2025-05-25T15:59:33+08:00 INFO   ioc/server/server.go:75 > loaded controllers: [comment.v1 book.v1] component:SERVER
+2025-05-25T15:59:33+08:00 INFO   ioc/server/server.go:76 > loaded apis: [books.v1] component:SERVER
+2025-05-25T15:59:33+08:00 INFO   ioc/server/server.go:77 > loaded defaults: [] component:SERVER
+2025-05-25T15:59:33+08:00 INFO   config/http/http.go:144 > HTTP服务启动成功, 监听地址: 127.0.0.1:8010 component:HTTP
+```
+
+## 总结
+
+业务分区框架, 我们专注于业务对象的开发, mcube相对于一个工具箱，承接其他非业务的公共功能
+
+
+## 其他非功能需求
+
+工具箱 提供很多工具，开箱即用, 比如health check, 比如metrics
+
+```go
+	// 健康检查
+	_ "github.com/infraboard/mcube/v2/ioc/apps/health/gin"
+	// metrics
+	_ "github.com/infraboard/mcube/v2/ioc/apps/metric/gin"
+```
+
+
+[metric.v1 books.v1 health.v1] metric, health 使用注入的对象
+```sh
+➜  v4 git:(main) ✗ go run main.go -f application.toml start
+[GIN-debug] [WARNING] Creating an Engine instance with the Logger and Recovery middleware already attached.
+
+[GIN-debug] [WARNING] Running in "debug" mode. Switch to "release" mode in production.
+ - using env:   export GIN_MODE=release
+ - using code:  gin.SetMode(gin.ReleaseMode)
+
+2025-05-25T16:06:42+08:00 INFO   config/gin/framework.go:41 > enable gin recovery component:GIN_WEBFRAMEWORK
+200
+[GIN-debug] GET    /metrics/                 --> github.com/infraboard/mcube/v2/ioc/apps/metric/gin.(*ginHandler).Registry.func1 (5 handlers)
+2025-05-25T16:06:42+08:00 INFO   metric/gin/metric.go:89 > Get the Metric using http://127.0.0.1:8010/metrics component:METRIC
+[GIN-debug] GET    /api/simple_api/v1/books  --> 122.51.31.227/go-course/go18/book/v4/apps/book/api.(*BookApiHandler).queryBook-fm (5 handlers)
+[GIN-debug] POST   /api/simple_api/v1/books  --> 122.51.31.227/go-course/go18/book/v4/apps/book/api.(*BookApiHandler).createBook-fm (5 handlers)
+[GIN-debug] GET    /healthz/                 --> github.com/infraboard/mcube/v2/ioc/apps/health/gin.(*HealthChecker).HealthHandleFunc-fm (5 handlers)
+2025-05-25T16:06:42+08:00 INFO   health/gin/check.go:55 > Get the Health using http://127.0.0.1:8010/healthz component:HEALTH_CHECK
+2025-05-25T16:06:42+08:00 INFO   ioc/server/server.go:74 > loaded configs: [app.v1 trace.v1 log.v1 validator.v1 gin_webframework.v1 datasource.v1 grpc.v1 http.v1] component:SERVER
+2025-05-25T16:06:42+08:00 INFO   ioc/server/server.go:75 > loaded controllers: [comment.v1 book.v1] component:SERVER
+2025-05-25T16:06:42+08:00 INFO   ioc/server/server.go:76 > loaded apis: [metric.v1 books.v1 health.v1] component:SERVER
+2025-05-25T16:06:42+08:00 INFO   ioc/server/server.go:77 > loaded defaults: [] component:SERVER
+2025-05-25T16:06:42+08:00 INFO   config/http/http.go:144 > HTTP服务启动成功, 监听地址: 127.0.0.1:8010 component:HTTP
+```
