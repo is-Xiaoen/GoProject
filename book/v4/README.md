@@ -2,7 +2,7 @@
 
 mcube 与 Ioc
 
-![业务分区架构](F:\GoProject\book\v4\image.png)
+![业务分区架构](./image.png)
 
 更新部分:
 1. 单元测试 支持通过环境变量注入，优化单元测试配置，共用一套配置
