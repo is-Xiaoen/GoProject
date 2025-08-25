@@ -1,0 +1,20 @@
+[app]
+  name = "devcloud"
+  description = "app desc"
+  address = "localhost"
+  encrypt_key = "defualt app encrypt key"
+
+[datasource]
+  provider = "mysql"
+  host = "127.0.0.1"
+  port = 3306
+  database = "devcloud_go18"
+  username = "root"
+  password = "123456"
+  auto_migrate = true
+  debug = true
+
+[http]
+  host = "127.0.0.1"
+  port = 8080
+  path_prefix = "api"
