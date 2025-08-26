@@ -1,6 +1,8 @@
 package api
 
 import (
+	_ "embed"
+
 	"github.com/infraboard/mcube/v2/ioc"
 	"github.com/infraboard/mcube/v2/ioc/config/gorestful"
 	"github.com/is-Xiaoen/GoProject/devcloud/mcenter/apps/token"
@@ -23,6 +25,9 @@ func (h *TokenRestulApiHandler) Name() string {
 	return token.APP_NAME
 }
 
+//go:embed docs/login.md
+var loginApiDocNotes string
+
 func (h *TokenRestulApiHandler) Init() error {
 	h.svc = token.GetService()
 
@@ -30,6 +35,7 @@ func (h *TokenRestulApiHandler) Init() error {
 	ws := gorestful.ObjectRouter(h)
 	ws.Route(ws.POST("").To(h.Login).
 		Doc("颁发令牌(登录)").
+		Notes(loginApiDocNotes).
 		Metadata(restfulspec.KeyOpenAPITags, tags).
 		Reads(token.IssueTokenRequest{}).
 		Writes(token.Token{}).
