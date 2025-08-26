@@ -1,4 +1,4 @@
-package privatetoken_test
+package privatetoken
 
 import (
 	"context"
