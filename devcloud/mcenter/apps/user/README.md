@@ -43,4 +43,25 @@ password + 随机字符串(salt) -->  (salt)hash它也是随机
 
 输入: password + 随机字符串(salt: 原来hash中的sal部分) == hash它也是随机(数据库)
 
+```go
+import (
+	"golang.org/x/crypto/bcrypt"
+)
 
+func (req *CreateUserRequest) PasswordHash() {
+	if req.isHashed {
+		return
+	}
+
+	b, _ := bcrypt.GenerateFromPassword([]byte(req.Password), bcrypt.DefaultCost)
+	req.Password = string(b)
+	req.isHashed = true
+}
+
+// 判断该用户的密码是否正确
+func (u *User) CheckPassword(password string) error {
+	// u.Password hash过后的只
+	// (password 原始值 + hash值中提区salt)
+	return bcrypt.CompareHashAndPassword([]byte(u.Password), []byte(password))
+}
+```

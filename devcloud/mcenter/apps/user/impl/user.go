@@ -10,7 +10,7 @@ import (
 	"gorm.io/gorm"
 )
 
-// 创建用户
+// CreateUser 创建用户
 func (i *UserServiceImpl) CreateUser(
 	ctx context.Context,
 	req *user.CreateUserRequest) (
@@ -33,7 +33,7 @@ func (i *UserServiceImpl) CreateUser(
 	return ins, nil
 }
 
-// 删除用户
+// DeleteUser 删除用户
 func (i *UserServiceImpl) DeleteUser(
 	ctx context.Context,
 	req *user.DeleteUserRequest,
@@ -50,7 +50,7 @@ func (i *UserServiceImpl) DeleteUser(
 		Error
 }
 
-// 查询用户列表
+// QueryUser 查询用户列表
 func (i *UserServiceImpl) QueryUser(
 	ctx context.Context,
 	req *user.QueryUserRequest) (
@@ -78,7 +78,7 @@ func (i *UserServiceImpl) QueryUser(
 	return set, nil
 }
 
-// 查询用户详情
+// DescribeUser 查询用户详情
 func (i *UserServiceImpl) DescribeUser(
 	ctx context.Context,
 	req *user.DescribeUserRequest) (

@@ -17,8 +17,8 @@ func GetService() Service {
 	return ioc.Controller().Get(APP_NAME).(Service)
 }
 
-// 定义User包的能力 就是接口定义
-// 站在使用放的角度来定义的   userSvc.Create(ctx, req), userSvc.DeleteUser(id)
+// Service 定义User包的能力 就是接口定义
+// 站在使用方的角度来定义的   userSvc.Create(ctx, req), userSvc.DeleteUser(id)
 // 接口定义好了，不要试图 随意修改接口， 要保证接口的兼容性
 type Service interface {
 	// 创建用户
@@ -38,6 +38,7 @@ func NewQueryUserRequest() *QueryUserRequest {
 	}
 }
 
+// QueryUserRequest 查询用户列表请求
 type QueryUserRequest struct {
 	*request.PageRequest
 	UserIds []uint64 `form:"user" json:"user"`
@@ -65,7 +66,7 @@ func NewDescribeUserRequestByUserName(username string) *DescribeUserRequest {
 	}
 }
 
-// 同时支持通过Id来查询，也要支持通过username来查询
+// DescribeUserRequest 同时支持通过Id来查询，也要支持通过username来查询
 type DescribeUserRequest struct {
 	DescribeBy    DESCRIBE_BY `json:"describe_by"`
 	DescribeValue string      `json:"describe_value"`
@@ -77,7 +78,7 @@ func NewDeleteUserRequest(id string) *DeleteUserRequest {
 	}
 }
 
-// 删除用户的请求
+// DeleteUserRequest 删除用户的请求
 type DeleteUserRequest struct {
 	Id string `json:"id"`
 }

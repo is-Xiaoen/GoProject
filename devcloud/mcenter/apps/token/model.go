@@ -1,12 +1,64 @@
 package token
 
 import (
+	"context"
 	"fmt"
+	"net/http"
+	"net/url"
+	"strings"
 	"time"
 
 	"github.com/infraboard/mcube/v2/exception"
 	"github.com/infraboard/mcube/v2/tools/pretty"
 )
+
+func GetAccessTokenFromHTTP(r *http.Request) string {
+	// 先从Token中获取
+	tk := r.Header.Get(ACCESS_TOKEN_HEADER_NAME)
+
+	// 1. 获取Token
+	if tk == "" {
+		cookie, err := r.Cookie(ACCESS_TOKEN_COOKIE_NAME)
+		if err != nil {
+			return ""
+		}
+		tk, _ = url.QueryUnescape(cookie.Value)
+	} else {
+		// 处理 带格式: Bearer <Your API key>
+		ft := strings.Split(tk, " ")
+		if len(ft) > 1 {
+			tk = ft[1]
+		}
+	}
+	return tk
+}
+
+func GetTokenFromCtx(ctx context.Context) *Token {
+	if v := ctx.Value(CTX_TOKEN_KEY); v != nil {
+		return v.(*Token)
+	}
+	return nil
+}
+
+func GetRefreshTokenFromHTTP(r *http.Request) string {
+	// 先从Token中获取
+	tk := r.Header.Get(REFRESH_TOKEN_HEADER_NAME)
+	return tk
+}
+
+func NewToken() *Token {
+	tk := &Token{
+		// 生产一个UUID的字符串
+		AccessToken:  MakeBearer(24),
+		RefreshToken: MakeBearer(32),
+		IssueAt:      time.Now(),
+		Status:       NewStatus(),
+		Extras:       map[string]string{},
+		Scope:        map[string]string{},
+	}
+
+	return tk
+}
 
 // 需要存储到数据库里面的对象(表)
 
@@ -51,7 +103,7 @@ func (t *Token) TableName() string {
 	return "tokens"
 }
 
-// 判断访问令牌是否过期,没设置代表用不过期
+// IsAccessTokenExpired 判断访问令牌是否过期,没设置代表用不过期
 func (t *Token) IsAccessTokenExpired() error {
 	if t.AccessTokenExpiredAt != nil {
 		//   now expiredTime
@@ -65,7 +117,7 @@ func (t *Token) IsAccessTokenExpired() error {
 	return nil
 }
 
-// 判断刷新Token是否过期
+// IsRreshTokenExpired 判断刷新Token是否过期
 func (t *Token) IsRreshTokenExpired() error {
 	if t.RefreshTokenExpiredAt != nil {
 		expiredSeconds := time.Since(*t.RefreshTokenExpiredAt).Seconds()
@@ -78,21 +130,24 @@ func (t *Token) IsRreshTokenExpired() error {
 	return nil
 }
 
-// 刷新Token的过期时间 是一个系统配置, 刷新token的过期时间 > 访问token的时间
+// SetExpiredAtByDuration 刷新Token的过期时间 是一个系统配置, 刷新token的过期时间 > 访问token的时间
 // 给一些默认设置: 刷新token的过期时间 = 访问token的时间 * 4
 func (t *Token) SetExpiredAtByDuration(duration time.Duration, refreshMulti uint) {
 	t.SetAccessTokenExpiredAt(time.Now().Add(duration))
 	t.SetRefreshTokenExpiredAt(time.Now().Add(duration * time.Duration(refreshMulti)))
 }
 
+// SetAccessTokenExpiredAt 设置访问令牌的过期时间
 func (t *Token) SetAccessTokenExpiredAt(v time.Time) {
 	t.AccessTokenExpiredAt = &v
 }
 
+// SetRefreshAt 设置更新的时间
 func (t *Token) SetRefreshAt(v time.Time) {
 	t.RefreshAt = &v
 }
 
+// AccessTokenExpiredTTL 返回访问令牌的剩余有效时间（秒）
 func (t *Token) AccessTokenExpiredTTL() int {
 	if t.AccessTokenExpiredAt != nil {
 		return int(t.AccessTokenExpiredAt.Sub(t.IssueAt).Seconds())
@@ -100,28 +155,34 @@ func (t *Token) AccessTokenExpiredTTL() int {
 	return 0
 }
 
+// SetRefreshTokenExpiredAt 设置刷新令牌的过期时间
 func (t *Token) SetRefreshTokenExpiredAt(v time.Time) {
 	t.RefreshTokenExpiredAt = &v
 }
 
+// String 将令牌对象转换为 JSON 字符串格式
 func (t *Token) String() string {
 	return pretty.ToJSON(t)
 }
 
+// SetIssuer 设置颁发器
 func (t *Token) SetIssuer(issuer string) *Token {
 	t.Issuer = issuer
 	return t
 }
 
+// SetSource 设置令牌来源
 func (t *Token) SetSource(source SOURCE) *Token {
 	t.Source = source
 	return t
 }
 
+// UserIdString 将用户ID转换为字符串
 func (t *Token) UserIdString() string {
 	return fmt.Sprintf("%d", t.UserId)
 }
 
+// CheckRefreshToken 检查提供的刷新令牌是否正确
 func (t *Token) CheckRefreshToken(refreshToken string) error {
 	if t.RefreshToken != refreshToken {
 		return exception.NewPermissionDeny("refresh token not conrect")
@@ -129,6 +190,7 @@ func (t *Token) CheckRefreshToken(refreshToken string) error {
 	return nil
 }
 
+// Lock 锁定令牌，并设置锁定类型和原因
 func (t *Token) Lock(l LOCK_TYPE, reason string) {
 	if t.Status == nil {
 		t.Status = NewStatus()
@@ -138,10 +200,12 @@ func (t *Token) Lock(l LOCK_TYPE, reason string) {
 	t.Status.SetLockAt(time.Now())
 }
 
+// NewStatus 创建并返回一个 Status 实例
 func NewStatus() *Status {
 	return &Status{}
 }
 
+// Status 描述了令牌的状态
 type Status struct {
 	// 冻结时间
 	LockAt *time.Time `json:"lock_at" bson:"lock_at" gorm:"column:lock_at;type:timestamp;index" description:"冻结时间"`
@@ -151,10 +215,12 @@ type Status struct {
 	LockReason string `json:"lock_reason" bson:"lock_reason" gorm:"column:lock_reason;type:text" description:"冻结原因"`
 }
 
+// SetLockAt 设置锁定时间
 func (s *Status) SetLockAt(v time.Time) {
 	s.LockAt = &v
 }
 
+// ToMap 将 Status 结构体转换为 map[string]any
 func (s *Status) ToMap() map[string]any {
 	return map[string]any{
 		"lock_at":     s.LockAt,

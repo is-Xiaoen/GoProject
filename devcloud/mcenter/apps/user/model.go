@@ -1,10 +1,11 @@
 package user
 
 import (
-	"encoding/json"
 	"fmt"
 	"time"
 
+	"github.com/infraboard/mcube/v2/exception"
+	"github.com/infraboard/mcube/v2/tools/pretty"
 	"github.com/infraboard/modules/iam/apps"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -18,7 +19,7 @@ func NewUser(req *CreateUserRequest) *User {
 	}
 }
 
-// 用于存放 存入数据库的对象(PO)
+// User 用于存放 存入数据库的对象(PO)
 type User struct {
 	// 基础数据
 	apps.ResourceMeta
@@ -30,16 +31,21 @@ type User struct {
 }
 
 func (u *User) String() string {
-	dj, _ := json.Marshal(u)
-	return string(dj)
+	return pretty.ToJSON(u)
 }
 
-// 判断该用户的密码是否正确
+// CheckPassword 判断该用户的密码是否正确
 func (u *User) CheckPassword(password string) error {
-	return bcrypt.CompareHashAndPassword([]byte(u.Password), []byte(password))
+	// u.Password hash过后的只
+	// (password 原始值 + hash值中提区salt)
+	err := bcrypt.CompareHashAndPassword([]byte(u.Password), []byte(password))
+	if err != nil {
+		return exception.NewUnauthorized("用户名或者密码对正确")
+	}
+	return nil
 }
 
-// 声明你这个对象存储在users表里面
+// TableName 声明你这个对象存储在users表里面
 // orm 负责调用TableName() 来动态获取你这个对象要存储的表的名称
 func (u *User) TableName() string {
 	return "users"
@@ -51,6 +57,7 @@ func NewCreateUserRequest() *CreateUserRequest {
 	}
 }
 
+// CreateUserRequest 创建用户请求
 type CreateUserRequest struct {
 	// 账号提供方
 	Provider PROVIDER `json:"provider" gorm:"column:provider;type:tinyint(1);not null;index" description:"账号提供方"`
