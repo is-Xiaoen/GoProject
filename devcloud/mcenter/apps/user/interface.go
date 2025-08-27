@@ -33,14 +33,14 @@ type Service interface {
 
 func NewQueryUserRequest() *QueryUserRequest {
 	return &QueryUserRequest{
-		PageRequest: request.NewDefaultPageRequest(),
+		PageRequest: *request.NewDefaultPageRequest(),
 		UserIds:     []uint64{},
 	}
 }
 
 // QueryUserRequest 查询用户列表请求
 type QueryUserRequest struct {
-	*request.PageRequest
+	request.PageRequest
 	UserIds []uint64 `form:"user" json:"user"`
 }
 

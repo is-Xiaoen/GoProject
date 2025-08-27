@@ -65,3 +65,27 @@ func (u *User) CheckPassword(password string) error {
 	return bcrypt.CompareHashAndPassword([]byte(u.Password), []byte(password))
 }
 ```
+
+	### 接口设计
+
+```go
+ws.Route(ws.GET("").To(h.QueryUser).
+	Doc("用户列表查询").
+	Metadata(restfulspec.KeyOpenAPITags, tags).
+	Param(restful.QueryParameter("page_size", "分页大小").DataType("integer")).
+	Param(restful.QueryParameter("page_number", "页码").DataType("integer")).
+	Writes(Set{}).
+	Returns(200, "OK", Set{}))
+```
+
+其中 user字段里面的
+```json
+{
+"password": "$2a$10$GoEjC.vFlgJ..BCvaMu6YurdVgyx4p6S4LFRXiqXESiVY4lokL496"
+}
+// 需要脱敏: "*"
+{
+"password": "****"
+}
+```
+

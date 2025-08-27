@@ -10,7 +10,7 @@ import (
 	"github.com/is-Xiaoen/GoProject/devcloud/mcenter/apps/token"
 )
 
-func (h *TokenRestulApiHandler) Login(r *restful.Request, w *restful.Response) {
+func (h *TokenRestfulApiHandler) Login(r *restful.Request, w *restful.Response) {
 	// 1. 获取用户的请求参数， 参数在Body里面
 	req := token.NewIssueTokenRequest()
 
@@ -78,7 +78,7 @@ func (h *TokenRestulApiHandler) Login(r *restful.Request, w *restful.Response) {
 // }
 
 // Logout HandleFunc
-func (h *TokenRestulApiHandler) Logout(r *restful.Request, w *restful.Response) {
+func (h *TokenRestfulApiHandler) Logout(r *restful.Request, w *restful.Response) {
 	req := token.NewRevolkTokenRequest(
 		token.GetAccessTokenFromHTTP(r.Request),
 		token.GetRefreshTokenFromHTTP(r.Request),
@@ -106,7 +106,7 @@ func (h *TokenRestulApiHandler) Logout(r *restful.Request, w *restful.Response) 
 	response.Success(w, tk)
 }
 
-func (h *TokenRestulApiHandler) ValiateToken(r *restful.Request, w *restful.Response) {
+func (h *TokenRestfulApiHandler) ValiateToken(r *restful.Request, w *restful.Response) {
 	// 1. 获取用户的请求参数， 参数在Body里面
 	req := token.NewValiateTokenRequest("")
 	err := r.ReadEntity(req)

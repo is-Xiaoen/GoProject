@@ -11,27 +11,27 @@ import (
 )
 
 func init() {
-	ioc.Api().Registry(&TokenRestulApiHandler{})
+	ioc.Api().Registry(&TokenRestfulApiHandler{})
 }
 
-type TokenRestulApiHandler struct {
+type TokenRestfulApiHandler struct {
 	ioc.ObjectImpl
 
 	// 依赖控制器
 	svc token.Service
 }
 
-func (h *TokenRestulApiHandler) Name() string {
+func (h *TokenRestfulApiHandler) Name() string {
 	return token.APP_NAME
 }
 
 //go:embed docs/login.md
 var loginApiDocNotes string
 
-func (h *TokenRestulApiHandler) Init() error {
+func (h *TokenRestfulApiHandler) Init() error {
 	h.svc = token.GetService()
 
-	tags := []string{"用户登录"}
+	tags := []string{"登录管理"}
 	ws := gorestful.ObjectRouter(h)
 	ws.Route(ws.POST("").To(h.Login).
 		Doc("颁发令牌(登录)").

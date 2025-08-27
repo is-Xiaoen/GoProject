@@ -66,7 +66,7 @@ type CreateUserRequest struct {
 	// 用户名
 	UserName string `json:"user_name" gorm:"column:user_name;type:varchar(100);not null;uniqueIndex" description:"用户名"`
 	// 密码(Hash过后的)
-	Password string `json:"password" gorm:"column:password;type:varchar(200);not null" description:"用户密码"`
+	Password string `json:"password,omitempty" gorm:"column:password;type:varchar(200);not null" description:"用户密码" mask:",3,4"`
 	// 用户描述
 	Description string `json:"description" gorm:"column:description;type:varchar(200);not null" description:"用户描述"`
 	// 用户类型
