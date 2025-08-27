@@ -1,12 +1,12 @@
 package api
 
 import (
+	restfulspec "github.com/emicklei/go-restful-openapi/v2"
+	"github.com/emicklei/go-restful/v3"
 	"github.com/infraboard/mcube/v2/ioc"
 	"github.com/infraboard/mcube/v2/ioc/config/gorestful"
 	"github.com/is-Xiaoen/GoProject/devcloud/mcenter/apps/user"
-
-	restfulspec "github.com/emicklei/go-restful-openapi/v2"
-	"github.com/emicklei/go-restful/v3"
+	"github.com/is-Xiaoen/GoProject/devcloud/mcenter/permission"
 )
 
 func init() {
@@ -36,7 +36,6 @@ func (h *UserRestfulApiHandler) Init() error {
 		// 这个开关怎么生效
 		// 中间件需求读取接口的描述信息，来决定是否需要认证
 		Metadata(permission.Auth(true)).
-		permiss
 		Param(restful.QueryParameter("page_size", "分页大小").DataType("integer")).
 		Param(restful.QueryParameter("page_number", "页码").DataType("integer")).
 		Writes(Set{}).
