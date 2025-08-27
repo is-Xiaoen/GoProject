@@ -5,6 +5,7 @@ go 1.24.5
 require (
 	github.com/caarlos0/env/v6 v6.10.1
 	github.com/emicklei/go-restful-openapi/v2 v2.11.0
+	github.com/emicklei/go-restful/v3 v3.12.2
 	github.com/gin-gonic/gin v1.10.1
 	github.com/infraboard/mcube/v2 v2.0.63
 	github.com/infraboard/modules v0.0.20
@@ -28,7 +29,6 @@ require (
 	github.com/cloudwego/base64x v0.1.5 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/dustin/go-humanize v1.0.1 // indirect
-	github.com/emicklei/go-restful/v3 v3.12.2 // indirect
 	github.com/gabriel-vasile/mimetype v1.4.8 // indirect
 	github.com/gin-contrib/sse v1.0.0 // indirect
 	github.com/glebarez/go-sqlite v1.21.2 // indirect
