@@ -33,6 +33,7 @@ func GetAccessTokenFromHTTP(r *http.Request) string {
 	return tk
 }
 
+// GetTokenFromCtx 从上下文中 提取 用户身份信息
 func GetTokenFromCtx(ctx context.Context) *Token {
 	if v := ctx.Value(CTX_TOKEN_KEY); v != nil {
 		return v.(*Token)

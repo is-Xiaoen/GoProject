@@ -29,9 +29,14 @@ func (h *UserRestfulApiHandler) Init() error {
 
 	tags := []string{"用户登录"}
 	ws := gorestful.ObjectRouter(h)
+	// required_auth=true/false
 	ws.Route(ws.GET("").To(h.QueryUser).
 		Doc("用户列表查询").
 		Metadata(restfulspec.KeyOpenAPITags, tags).
+		// 这个开关怎么生效
+		// 中间件需求读取接口的描述信息，来决定是否需要认证
+		Metadata(permission.Auth(true)).
+		permiss
 		Param(restful.QueryParameter("page_size", "分页大小").DataType("integer")).
 		Param(restful.QueryParameter("page_number", "页码").DataType("integer")).
 		Writes(Set{}).
