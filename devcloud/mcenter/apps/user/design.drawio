@@ -43,7 +43,7 @@
                 <mxCell id="12" value="UI" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
                     <mxGeometry x="40" y="25" width="60" height="30" as="geometry"/>
                 </mxCell>
-                <mxCell id="16" value="&lt;h1 style=&quot;margin-top: 0px;&quot;&gt;Heading&lt;/h1&gt;&lt;p&gt;Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.&lt;/p&gt;" style="text;html=1;whiteSpace=wrap;overflow=hidden;rounded=0;" vertex="1" parent="1">
+                 <mxCell id="16" value="&lt;h1 style=&quot;margin-top: 0px;&quot;&gt;脱敏&lt;/h1&gt;&lt;p&gt;数据出去时&lt;/p&gt;" style="text;html=1;whiteSpace=wrap;overflow=hidden;rounded=0;" vertex="1" parent="1">
                     <mxGeometry x="580" y="100" width="180" height="120" as="geometry"/>
                 </mxCell>
             </root>

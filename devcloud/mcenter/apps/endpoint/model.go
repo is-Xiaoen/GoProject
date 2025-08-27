@@ -238,8 +238,10 @@ func NewEntryFromRestRoute(route restful.Route) *RouteEntry {
 }
 
 func NewEntryFromRestfulContainer(c *restful.Container) (entries []*RouteEntry) {
+	// 获取当前Container里面所有的 WebService
 	wss := c.RegisteredWebServices()
 	for i := range wss {
+		// 获取WebService下的路由条目
 		for _, route := range wss[i].Routes() {
 			es := NewEntryFromRestRoute(route)
 			entries = append(entries, es)
