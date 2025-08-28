@@ -10,7 +10,7 @@ import (
 	_ "github.com/is-Xiaoen/GoProject/devcloud/mcenter/apps"
 )
 
-func DevelopmentSet() {
+func DevelopmentSetUp() {
 	// import 后自动执行的逻辑
 	// 工具对象的初始化, 需要的是绝对路径
 	fmt.Println(os.Getenv("CONFIG_PATH"))

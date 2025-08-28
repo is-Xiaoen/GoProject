@@ -18,5 +18,5 @@ func TestPasswordIssuer(t *testing.T) {
 }
 
 func init() {
-	test.DevelopmentSet()
+	test.DevelopmentSetUp()
 }

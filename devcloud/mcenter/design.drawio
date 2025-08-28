@@ -1,6 +1,6 @@
 <mxfile host="65bd71144e">
     <diagram id="kBUSl4Twz2xUubsumQ87" name="第 1 页">
-        <mxGraphModel dx="892" dy="554" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+        <mxGraphModel dx="892" dy="371" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -127,7 +127,7 @@
                 <mxCell id="38" value="权限拦截器" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
                     <mxGeometry x="120" y="830" width="120" height="45" as="geometry"/>
                 </mxCell>
-                <mxCell id="40" value="授权策略&lt;div&gt;用户的授权策略&lt;/div&gt;&lt;div&gt;User, Name, 接口&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                <mxCell id="40" value="授权策略&lt;div&gt;用户的授权策略&lt;/div&gt;&lt;div&gt;User, 空间, Role&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
                     <mxGeometry x="294" y="830" width="120" height="50" as="geometry"/>
                 </mxCell>
                 <mxCell id="42" value="空间&lt;div&gt;Namepsace&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
@@ -139,19 +139,19 @@
                 <mxCell id="44" value="接口列表" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
                     <mxGeometry x="760" y="825" width="120" height="55" as="geometry"/>
                 </mxCell>
-                <mxCell id="45" value="" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                <mxCell id="45" value="" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
                     <mxGeometry x="100" y="1090" width="330" height="180" as="geometry"/>
                 </mxCell>
-                <mxCell id="46" value="用户认证" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+                <mxCell id="46" value="用户认证" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
                     <mxGeometry x="100" y="1060" width="60" height="30" as="geometry"/>
                 </mxCell>
-                <mxCell id="49" style="edgeStyle=none;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="1" source="47" target="48">
+                <mxCell id="49" style="edgeStyle=none;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;" parent="1" source="47" target="48" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="47" value="token" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                <mxCell id="47" value="token" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
                     <mxGeometry x="280" y="1119" width="120" height="50" as="geometry"/>
                 </mxCell>
-                <mxCell id="48" value="user" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                <mxCell id="48" value="user" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
                     <mxGeometry x="120" y="1119" width="120" height="50" as="geometry"/>
                 </mxCell>
             </root>

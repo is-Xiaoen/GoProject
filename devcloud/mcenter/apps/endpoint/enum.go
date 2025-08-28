@@ -3,7 +3,9 @@ package endpoint
 type ACCESS_MODE uint8
 
 const (
+	// 只读模式
 	ACCESS_MODE_READ = iota
+	// 读写模式
 	ACCESS_MODE_READ_WRITE
 )
 

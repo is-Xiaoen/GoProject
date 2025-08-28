@@ -13,6 +13,6 @@ var (
 )
 
 func init() {
-	test.DevelopmentSet()
+	test.DevelopmentSetUp()
 	svc = token.GetService()
 }
