@@ -67,7 +67,7 @@ func NewRouteEntry() *RouteEntry {
 	}
 }
 
-// Entry 路由条目, service-method-path
+// RouteEntry  路由条目, service-method-path
 type RouteEntry struct {
 	// 该功能属于那个服务
 	UUID string `json:"uuid" bson:"uuid" gorm:"column:uuid;type:varchar(100);uniqueIndex" optional:"true" description:"路由UUID"`

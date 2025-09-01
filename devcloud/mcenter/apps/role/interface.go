@@ -27,17 +27,17 @@ type Service interface {
 	ViewPermissionService
 }
 
-// 角色管理
+// RoleService 角色管理
 type RoleService interface {
-	// 创建角色
+	// CreateRole 创建角色
 	CreateRole(context.Context, *CreateRoleRequest) (*Role, error)
-	// 列表查询
+	// QueryRole 列表查询
 	QueryRole(context.Context, *QueryRoleRequest) (*types.Set[*Role], error)
-	// 详情查询
+	// DescribeRole 详情查询
 	DescribeRole(context.Context, *DescribeRoleRequest) (*Role, error)
-	// 更新角色
+	// UpdateRole 更新角色
 	UpdateRole(context.Context, *UpdateRoleRequest) (*Role, error)
-	// 删除角色
+	// DeleteRole 删除角色
 	DeleteRole(context.Context, *DeleteRoleRequest) (*Role, error)
 }
 
@@ -85,15 +85,15 @@ type DeleteRoleRequest struct {
 	apps.GetRequest
 }
 
-// 角色API接口管理
+// ApiPermissionService 角色API接口管理
 type ApiPermissionService interface {
-	// 查询角色关联的权限条目
+	// QueryApiPermission 查询角色关联的权限条目
 	QueryApiPermission(context.Context, *QueryApiPermissionRequest) ([]*ApiPermission, error)
-	// 添加角色关联API
+	// AddApiPermission 添加角色关联API
 	AddApiPermission(context.Context, *AddApiPermissionRequest) ([]*ApiPermission, error)
-	// 移除角色关联API
+	// RemoveApiPermission 移除角色关联API
 	RemoveApiPermission(context.Context, *RemoveApiPermissionRequest) ([]*ApiPermission, error)
-	// 查询匹配到的Api接口列表
+	// QueryMatchedEndpoint 查询匹配到的Api接口列表
 	QueryMatchedEndpoint(context.Context, *QueryMatchedEndpointRequest) (*types.Set[*endpoint.Endpoint], error)
 }
 
@@ -183,15 +183,15 @@ type UpdateApiPermissionRequest struct {
 	Items []*ApiPermission `json:"items"`
 }
 
-// 角色菜单管理
+// ViewPermissionService 角色菜单管理
 type ViewPermissionService interface {
-	// 查询角色关联的视图权限
+	// QueryViewPermission 查询角色关联的视图权限
 	QueryViewPermission(context.Context, *QueryViewPermissionRequest) ([]*ViewPermission, error)
-	// 添加角色关联菜单
+	// AddViewPermission 添加角色关联菜单
 	AddViewPermission(context.Context, *AddViewPermissionRequest) ([]*ViewPermission, error)
-	// 移除角色关联菜单
+	// RemoveViewPermission 移除角色关联菜单
 	RemoveViewPermission(context.Context, *RemoveViewPermissionRequest) ([]*ViewPermission, error)
-	// 查询能匹配到视图菜单
+	// QueryMatchedPage 查询能匹配到视图菜单
 	QueryMatchedPage(context.Context, *QueryMatchedPageRequest) (*types.Set[*view.Menu], error)
 }
 

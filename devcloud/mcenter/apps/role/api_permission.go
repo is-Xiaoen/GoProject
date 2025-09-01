@@ -72,7 +72,7 @@ func (a *ApiPermissionSpec) GetEndpointId() uint64 {
 	return *a.EndpointId
 }
 
-// 判断是否有当前API的访问权限
+// IsMatch 判断是否有当前API的访问权限
 func (a *ApiPermissionSpec) IsMatch(target *endpoint.Endpoint) bool {
 	switch a.MatchBy {
 	case MATCH_BY_ID:
