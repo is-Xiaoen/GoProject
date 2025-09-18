@@ -18,15 +18,15 @@ func GetService() Service {
 }
 
 type Service interface {
-	// 创建空间
+	// CreateNamespace 创建空间
 	CreateNamespace(context.Context, *CreateNamespaceRequest) (*Namespace, error)
-	// 查询空间
+	// QueryNamespace 查询空间
 	QueryNamespace(context.Context, *QueryNamespaceRequest) (*types.Set[*Namespace], error)
-	// 查询空间详情
+	// DescribeNamespace 查询空间详情
 	DescribeNamespace(context.Context, *DescribeNamespaceRequest) (*Namespace, error)
-	// 更新空间
+	// UpdateNamespace 更新空间
 	UpdateNamespace(context.Context, *UpdateNamespaceRequest) (*Namespace, error)
-	// 删除空间
+	// DeleteNamespace 删除空间
 	DeleteNamespace(context.Context, *DeleteNamespaceRequest) (*Namespace, error)
 }
 
