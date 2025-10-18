@@ -10,7 +10,7 @@ import (
 	"gorm.io/gorm"
 )
 
-// 创建角色
+// CreateRole 创建角色
 func (i *RoleServiceImpl) CreateRole(ctx context.Context, in *role.CreateRoleRequest) (*role.Role, error) {
 	if err := in.Validate(); err != nil {
 		return nil, err
@@ -27,7 +27,7 @@ func (i *RoleServiceImpl) CreateRole(ctx context.Context, in *role.CreateRoleReq
 	return ins, nil
 }
 
-// 列表查询
+// QueryRole 列表查询
 func (i *RoleServiceImpl) QueryRole(ctx context.Context, in *role.QueryRoleRequest) (*types.Set[*role.Role], error) {
 	set := types.New[*role.Role]()
 
@@ -53,7 +53,7 @@ func (i *RoleServiceImpl) QueryRole(ctx context.Context, in *role.QueryRoleReque
 	return set, nil
 }
 
-// 详情查询
+// DescribeRole 详情查询
 func (i *RoleServiceImpl) DescribeRole(ctx context.Context, in *role.DescribeRoleRequest) (*role.Role, error) {
 	query := datasource.DBFromCtx(ctx)
 
@@ -74,7 +74,7 @@ func (i *RoleServiceImpl) DescribeRole(ctx context.Context, in *role.DescribeRol
 	return ins, nil
 }
 
-// 更新角色
+// UpdateRole 更新角色
 func (i *RoleServiceImpl) UpdateRole(ctx context.Context, in *role.UpdateRoleRequest) (*role.Role, error) {
 	descReq := role.NewDescribeRoleRequest()
 	descReq.SetId(in.Id)
@@ -87,7 +87,7 @@ func (i *RoleServiceImpl) UpdateRole(ctx context.Context, in *role.UpdateRoleReq
 	return ins, datasource.DBFromCtx(ctx).Where("id = ?", in.Id).Updates(ins).Error
 }
 
-// 删除角色
+// DeleteRole 删除角色
 func (i *RoleServiceImpl) DeleteRole(ctx context.Context, in *role.DeleteRoleRequest) (*role.Role, error) {
 	descReq := role.NewDescribeRoleRequest()
 	descReq.SetId(in.Id)

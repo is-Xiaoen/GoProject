@@ -11,7 +11,7 @@ import (
 	"gorm.io/gorm"
 )
 
-// 添加角色关联API
+// AddApiPermission 添加角色关联API
 func (i *RoleServiceImpl) AddApiPermission(ctx context.Context, in *role.AddApiPermissionRequest) ([]*role.ApiPermission, error) {
 	if err := in.Validate(); err != nil {
 		return nil, exception.NewBadRequest("validate add api permission error, %s", err)
@@ -35,7 +35,7 @@ func (i *RoleServiceImpl) AddApiPermission(ctx context.Context, in *role.AddApiP
 	return perms, nil
 }
 
-// 查询角色关联的权限条目
+// QueryApiPermission 查询角色关联的权限条目
 func (i *RoleServiceImpl) QueryApiPermission(ctx context.Context, in *role.QueryApiPermissionRequest) ([]*role.ApiPermission, error) {
 	query := datasource.DBFromCtx(ctx).Model(&role.ApiPermission{})
 	if len(in.RoleIds) > 0 {
@@ -54,7 +54,7 @@ func (i *RoleServiceImpl) QueryApiPermission(ctx context.Context, in *role.Query
 	return perms, nil
 }
 
-// 移除角色关联API
+// RemoveApiPermission 移除角色关联API
 func (i *RoleServiceImpl) RemoveApiPermission(ctx context.Context, in *role.RemoveApiPermissionRequest) ([]*role.ApiPermission, error) {
 	if err := in.Validate(); err != nil {
 		return nil, err
@@ -75,7 +75,7 @@ func (i *RoleServiceImpl) RemoveApiPermission(ctx context.Context, in *role.Remo
 	return perms, nil
 }
 
-// 查询匹配到的Api接口列表
+// QueryMatchedEndpoint 查询匹配到的Api接口列表
 func (i *RoleServiceImpl) QueryMatchedEndpoint(ctx context.Context, in *role.QueryMatchedEndpointRequest) (*types.Set[*endpoint.Endpoint], error) {
 	set := types.New[*endpoint.Endpoint]()
 

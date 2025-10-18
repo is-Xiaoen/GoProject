@@ -11,7 +11,7 @@ import (
 	"gorm.io/gorm"
 )
 
-// 添加角色关联菜单
+// AddViewPermission 添加角色关联菜单
 func (i *RoleServiceImpl) AddViewPermission(ctx context.Context, in *role.AddViewPermissionRequest) ([]*role.ViewPermission, error) {
 	if err := in.Validate(); err != nil {
 		return nil, exception.NewBadRequest("validate add view permission error, %s", err)
@@ -35,7 +35,7 @@ func (i *RoleServiceImpl) AddViewPermission(ctx context.Context, in *role.AddVie
 	return perms, nil
 }
 
-// 查询角色关联的视图权限
+// QueryViewPermission 查询角色关联的视图权限
 func (i *RoleServiceImpl) QueryViewPermission(ctx context.Context, in *role.QueryViewPermissionRequest) ([]*role.ViewPermission, error) {
 	query := datasource.DBFromCtx(ctx).Model(&role.ViewPermission{})
 	if len(in.RoleIds) > 0 {
@@ -54,7 +54,7 @@ func (i *RoleServiceImpl) QueryViewPermission(ctx context.Context, in *role.Quer
 	return perms, nil
 }
 
-// 移除角色关联菜单
+// RemoveViewPermission 移除角色关联菜单
 func (i *RoleServiceImpl) RemoveViewPermission(ctx context.Context, in *role.RemoveViewPermissionRequest) ([]*role.ViewPermission, error) {
 	if err := in.Validate(); err != nil {
 		return nil, err
@@ -76,7 +76,7 @@ func (i *RoleServiceImpl) RemoveViewPermission(ctx context.Context, in *role.Rem
 	return perms, nil
 }
 
-// 查询能匹配到视图菜单
+// QueryMatchedPage 查询能匹配到视图菜单
 func (i *RoleServiceImpl) QueryMatchedPage(ctx context.Context, in *role.QueryMatchedPageRequest) (*types.Set[*view.Menu], error) {
 	return nil, nil
 }

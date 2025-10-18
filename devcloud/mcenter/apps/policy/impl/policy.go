@@ -14,7 +14,7 @@ import (
 	"gorm.io/gorm"
 )
 
-// 创建策略
+// CreatePolicy 创建策略
 func (i *PolicyServiceImpl) CreatePolicy(ctx context.Context, in *policy.CreatePolicyRequest) (*policy.Policy, error) {
 	if err := in.Validate(); err != nil {
 		return nil, err
@@ -31,7 +31,7 @@ func (i *PolicyServiceImpl) CreatePolicy(ctx context.Context, in *policy.CreateP
 	return ins, nil
 }
 
-// 查询策略列表
+// QueryPolicy 查询策略列表
 func (i *PolicyServiceImpl) QueryPolicy(ctx context.Context, in *policy.QueryPolicyRequest) (*types.Set[*policy.Policy], error) {
 	set := types.New[*policy.Policy]()
 
@@ -104,7 +104,7 @@ func (i *PolicyServiceImpl) QueryPolicy(ctx context.Context, in *policy.QueryPol
 	return set, nil
 }
 
-// 查询详情
+// DescribePolicy 查询详情
 func (i *PolicyServiceImpl) DescribePolicy(ctx context.Context, in *policy.DescribePolicyRequest) (*policy.Policy, error) {
 	query := datasource.DBFromCtx(ctx)
 
@@ -119,7 +119,7 @@ func (i *PolicyServiceImpl) DescribePolicy(ctx context.Context, in *policy.Descr
 	return ins, nil
 }
 
-// 更新策略
+// UpdatePolicy 更新策略
 func (i *PolicyServiceImpl) UpdatePolicy(ctx context.Context, in *policy.UpdatePolicyRequest) (*policy.Policy, error) {
 	descReq := policy.NewDescribePolicyRequest()
 	descReq.SetId(in.Id)
@@ -132,7 +132,7 @@ func (i *PolicyServiceImpl) UpdatePolicy(ctx context.Context, in *policy.UpdateP
 	return ins, datasource.DBFromCtx(ctx).Where("id = ?", in.Id).Updates(ins).Error
 }
 
-// 删除策略
+// DeletePolicy 删除策略
 func (i *PolicyServiceImpl) DeletePolicy(ctx context.Context, in *policy.DeletePolicyRequest) (*policy.Policy, error) {
 	descReq := policy.NewDescribePolicyRequest()
 	descReq.SetId(in.Id)

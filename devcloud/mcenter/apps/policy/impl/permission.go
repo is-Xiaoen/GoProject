@@ -11,7 +11,7 @@ import (
 	"github.com/is-Xiaoen/GoProject/devcloud/mcenter/apps/view"
 )
 
-// 查询用户可以访问的空间
+// QueryNamespace 查询用户可以访问的空间
 func (i *PolicyServiceImpl) QueryNamespace(ctx context.Context, in *policy.QueryNamespaceRequest) (*types.Set[*namespace.Namespace], error) {
 	nsReq := namespace.NewQueryNamespaceRequest()
 
@@ -34,7 +34,7 @@ func (i *PolicyServiceImpl) QueryNamespace(ctx context.Context, in *policy.Query
 	return i.namespace.QueryNamespace(ctx, nsReq)
 }
 
-// 查询用户可以访问的Api接口
+// QueryEndpoint 查询用户可以访问的Api接口
 // 找到用户可以访问的角色列表，然后在找出角色对应的Api访问权限
 func (i *PolicyServiceImpl) QueryEndpoint(ctx context.Context, in *policy.QueryEndpointRequest) (*types.Set[*endpoint.Endpoint], error) {
 	set := types.New[*endpoint.Endpoint]()
@@ -64,7 +64,7 @@ func (i *PolicyServiceImpl) QueryEndpoint(ctx context.Context, in *policy.QueryE
 	return set, nil
 }
 
-// 校验Api接口权限
+// ValidateEndpointPermission 校验Api接口权限
 func (i *PolicyServiceImpl) ValidateEndpointPermission(ctx context.Context, in *policy.ValidateEndpointPermissionRequest) (*policy.ValidateEndpointPermissionResponse, error) {
 	resp := policy.NewValidateEndpointPermissionResponse(*in)
 
@@ -96,12 +96,12 @@ func (i *PolicyServiceImpl) ValidateEndpointPermission(ctx context.Context, in *
 	return resp, nil
 }
 
-// 查询用户可以访问的菜单
+// QueryMenu 查询用户可以访问的菜单
 func (i *PolicyServiceImpl) QueryMenu(ctx context.Context, in *policy.QueryMenuRequest) (*types.Set[*view.Menu], error) {
 	return nil, nil
 }
 
-// 校验Menu视图权限
+// ValidatePagePermission 校验Menu视图权限
 func (i *PolicyServiceImpl) ValidatePagePermission(ctx context.Context, in *policy.ValidatePagePermissionRequest) (*policy.ValidatePagePermissionResponse, error) {
 	return nil, nil
 }

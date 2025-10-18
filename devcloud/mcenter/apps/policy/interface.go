@@ -127,15 +127,15 @@ type DeletePolicyRequest struct {
 }
 
 type PermissionService interface {
-	// 查询用户可以访问的空间
+	// QueryNamespace 查询用户可以访问的空间
 	QueryNamespace(context.Context, *QueryNamespaceRequest) (*types.Set[*namespace.Namespace], error)
-	// 查询用户可以访问的菜单
+	// QueryMenu 查询用户可以访问的菜单
 	QueryMenu(context.Context, *QueryMenuRequest) (*types.Set[*view.Menu], error)
-	// 查询用户可以访问的Api接口
+	// QueryEndpoint 查询用户可以访问的Api接口
 	QueryEndpoint(context.Context, *QueryEndpointRequest) (*types.Set[*endpoint.Endpoint], error)
-	// 校验页面权限
+	// ValidatePagePermission 校验页面权限
 	ValidatePagePermission(context.Context, *ValidatePagePermissionRequest) (*ValidatePagePermissionResponse, error)
-	// 校验接口权限
+	// ValidateEndpointPermission 校验接口权限
 	ValidateEndpointPermission(context.Context, *ValidateEndpointPermissionRequest) (*ValidateEndpointPermissionResponse, error)
 }
 
