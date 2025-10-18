@@ -10,7 +10,7 @@ import (
 	"gorm.io/gorm"
 )
 
-// 注册API接口
+// RegistryEndpoint 注册API接口
 // 这是一个批量接口, 一次添加多条记录
 // 需要保证事务: 同时成功，或者同时失败, MySQL事务
 func (i *EndpointServiceImpl) RegistryEndpoint(ctx context.Context, in *endpoint.RegistryEndpointRequest) (*types.Set[*endpoint.Endpoint], error) {
@@ -52,7 +52,7 @@ func (i *EndpointServiceImpl) RegistryEndpoint(ctx context.Context, in *endpoint
 	return set, nil
 }
 
-// 查询API接口列表
+// QueryEndpoint 查询API接口列表
 func (i *EndpointServiceImpl) QueryEndpoint(ctx context.Context, in *endpoint.QueryEndpointRequest) (*types.Set[*endpoint.Endpoint], error) {
 	set := types.New[*endpoint.Endpoint]()
 
@@ -76,7 +76,7 @@ func (i *EndpointServiceImpl) QueryEndpoint(ctx context.Context, in *endpoint.Qu
 	return set, nil
 }
 
-// 查询API接口详情
+// DescribeEndpoint 查询API接口详情
 func (i *EndpointServiceImpl) DescribeEndpoint(ctx context.Context, in *endpoint.DescribeEndpointRequest) (*endpoint.Endpoint, error) {
 	query := datasource.DBFromCtx(ctx)
 

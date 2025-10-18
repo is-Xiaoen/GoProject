@@ -12,7 +12,7 @@ func init() {
 
 var _ endpoint.Service = (*EndpointServiceImpl)(nil)
 
-// 他是user service 服务的控制器
+// EndpointServiceImpl 他是user service 服务的控制器
 type EndpointServiceImpl struct {
 	ioc.ObjectImpl
 }
@@ -28,7 +28,7 @@ func (i *EndpointServiceImpl) Init() error {
 	return nil
 }
 
-// 定义托管到Ioc里面的名称
+// Name 定义托管到Ioc里面的名称
 func (i *EndpointServiceImpl) Name() string {
 	return endpoint.APP_NAME
 }

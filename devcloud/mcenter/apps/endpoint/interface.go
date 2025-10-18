@@ -20,11 +20,11 @@ func GetService() Service {
 }
 
 type Service interface {
-	// 注册API接口
+	// RegistryEndpoint 注册API接口
 	RegistryEndpoint(context.Context, *RegistryEndpointRequest) (*types.Set[*Endpoint], error)
-	// 查询API接口列表
+	// QueryEndpoint 查询API接口列表
 	QueryEndpoint(context.Context, *QueryEndpointRequest) (*types.Set[*Endpoint], error)
-	// 查询API接口详情
+	// DescribeEndpoint 查询API接口详情
 	DescribeEndpoint(context.Context, *DescribeEndpointRequest) (*Endpoint, error)
 }
 
