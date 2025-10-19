@@ -18,7 +18,7 @@ func TestQueryNamespace(t *testing.T) {
 
 func TestQueryEndpoint(t *testing.T) {
 	req := policy.NewQueryEndpointRequest()
-	req.UserId = 1
+	req.UserId = 2
 	req.NamespaceId = 1
 	set, err := impl.QueryEndpoint(ctx, req)
 	if err != nil {

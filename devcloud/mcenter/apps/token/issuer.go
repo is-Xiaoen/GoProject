@@ -46,9 +46,9 @@ var (
 // 令牌格式遵循 RFC 6750 规范
 // https://tools.ietf.org/html/rfc6750#section-2.1
 // b64token = 1*( ALPHA / DIGIT /"-" / "." / "_" / "~" / "+" / "/" ) *"="
-func MakeBearer(lenth int) string {
-	t := make([]byte, 0, lenth) // 创建一个预分配了容量的字节切片，以提高效率
-	for range lenth {
+func MakeBearer(length int) string {
+	t := make([]byte, 0, length) // 创建一个预分配了容量的字节切片，以提高效率
+	for range length {
 		// 随机选择一个字符
 		rn := rand.IntN(len(charlist))
 		t = append(t, charlist[rn])

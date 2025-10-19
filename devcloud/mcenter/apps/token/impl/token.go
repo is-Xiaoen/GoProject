@@ -58,6 +58,11 @@ func (i *TokenServiceImpl) IssueToken(ctx context.Context, in *token.IssueTokenR
 		}
 	}
 
+	if tk.NamespaceId == 0 {
+		tk.NamespaceId = 1
+	}
+
+	// 保持token
 	// 如果没有已存在的活跃令牌（或策略允许），则将新生成的令牌保存到数据库
 	if err := datasource.DBFromCtx(ctx).
 		Create(tk).

@@ -68,7 +68,7 @@ type Token struct {
 	Id uint64 `json:"id" gorm:"column:id;type:uint;primary_key;"`
 	// 用户来源
 	Source SOURCE `json:"source" gorm:"column:source;type:tinyint(1);index" description:"用户来源"`
-	// 颁发器, 办法方式(user/pass )
+	// 颁发器, 颁发方式(user/pass )
 	Issuer string `json:"issuer" gorm:"column:issuer;type:varchar(100);index" description:"颁发器"`
 	// 该Token属于哪个用户
 	UserId uint64 `json:"user_id" gorm:"column:user_id;index" description:"持有该Token的用户Id"`

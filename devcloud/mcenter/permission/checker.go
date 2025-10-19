@@ -7,9 +7,11 @@ import (
 	"github.com/infraboard/mcube/v2/exception"
 	"github.com/infraboard/mcube/v2/http/restful/response"
 	"github.com/infraboard/mcube/v2/ioc"
+	"github.com/infraboard/mcube/v2/ioc/config/application"
 	"github.com/infraboard/mcube/v2/ioc/config/gorestful"
 	"github.com/infraboard/mcube/v2/ioc/config/log"
 	"github.com/is-Xiaoen/GoProject/devcloud/mcenter/apps/endpoint"
+	"github.com/is-Xiaoen/GoProject/devcloud/mcenter/apps/policy"
 	"github.com/is-Xiaoen/GoProject/devcloud/mcenter/apps/token"
 	"github.com/rs/zerolog"
 )
@@ -34,22 +36,22 @@ func Action(v string) (string, string) {
 	return endpoint.META_ACTION_KEY, v
 }
 
-// 这个中间件也是对象, 认证与鉴权
+// Checker 这个中间件也是对象, 认证与鉴权
 // 通过路由装饰 来当中开关，控制怎么认证,是否开启认证，是否开启坚强，角色标记
 type Checker struct {
 	ioc.ObjectImpl
 	log *zerolog.Logger
 
-	token token.Service
-	// policy policy.Service
+	token  token.Service
+	policy policy.Service
 }
 
-// 中间件对象名称
+// Name 中间件对象名称
 func (c *Checker) Name() string {
 	return "permission_checker"
 }
 
-// 对象初始化的优先级, 由于业务接口在Init函数里面 使用默认优先级0, 由大到小
+// Priority 对象初始化的优先级, 由于业务接口在Init函数里面 使用默认优先级0, 由大到小
 // 框架是 899 898
 // 框架的init函数调用完成，里面调用 这个对象的init函数, 实现了全局中间件
 func (c *Checker) Priority() int {
@@ -59,14 +61,14 @@ func (c *Checker) Priority() int {
 func (c *Checker) Init() error {
 	c.log = log.Sub(c.Name())
 	c.token = token.GetService()
-	// c.policy = policy.GetService()
+	c.policy = policy.GetService()
 
 	// 注册认证中间件
 	gorestful.RootRouter().Filter(c.Check)
 	return nil
 }
 
-// 中间件的函数里面
+// Check 中间件的函数里面
 func (c *Checker) Check(r *restful.Request, w *restful.Response, next *restful.FilterChain) {
 	// 请求处理前, 对接口进行保护
 	// 1. 知道用户当前访问的是哪个接口, 当前url 匹配到的路由是哪个
@@ -116,5 +118,53 @@ func (c *Checker) CheckToken(r *restful.Request) (*token.Token, error) {
 }
 
 func (c *Checker) CheckPolicy(r *restful.Request, tk *token.Token, route *endpoint.RouteEntry) error {
+	// 判断用户是否是超级管理员
+	if tk.IsAdmin {
+		return nil
+	}
+
+	// 角色校验 @Required('admin', '')
+	if route.HasRequiredRole() {
+		set, err := c.policy.QueryPolicy(r.Request.Context(),
+			policy.NewQueryPolicyRequest().
+				SetNamespaceId(tk.NamespaceId).
+				SetUserId(tk.UserId).
+				SetExpired(false).
+				SetEnabled(true).
+				SetWithRole(true),
+		)
+		if err != nil {
+			return exception.NewInternalServerError("%s", err.Error())
+		}
+		hasPerm := false
+		for i := range set.Items {
+			p := set.Items[i]
+			if route.IsRequireRole(p.Role.Name) {
+				hasPerm = true
+				break
+			}
+		}
+		if !hasPerm {
+			return exception.NewPermissionDeny("无权限访问")
+		}
+	}
+
+	// API权限校验
+	if route.RequiredPerm {
+		validateReq := policy.NewValidateEndpointPermissionRequest()
+		validateReq.UserId = tk.UserId
+		validateReq.NamespaceId = tk.NamespaceId
+		validateReq.Service = application.Get().GetAppName()
+		validateReq.Method = route.Method
+		validateReq.Path = route.Path
+		resp, err := c.policy.ValidateEndpointPermission(r.Request.Context(), validateReq)
+		if err != nil {
+			return exception.NewInternalServerError("%s", err.Error())
+		}
+		if !resp.HasPermission {
+			return exception.NewPermissionDeny("无权限访问")
+		}
+	}
+
 	return nil
 }

@@ -36,6 +36,15 @@ func (i *PolicyServiceImpl) QueryPolicy(ctx context.Context, in *policy.QueryPol
 	set := types.New[*policy.Policy]()
 
 	query := datasource.DBFromCtx(ctx).Model(&policy.Policy{}).Order("created_at desc")
+	if in.UserId != nil {
+		query = query.Where("user_id = ?", in.UserId)
+	}
+	if in.NamespaceId != nil {
+		query = query.Where("namespace_id = ?", in.NamespaceId)
+	}
+	if in.Enabled != nil {
+		query = query.Where("enabled = ?", in.Enabled)
+	}
 	err := query.Count(&set.Total).Error
 	if err != nil {
 		return nil, err

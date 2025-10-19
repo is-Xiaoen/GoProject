@@ -36,6 +36,7 @@ func (h *UserRestfulApiHandler) Init() error {
 		// 这个开关怎么生效
 		// 中间件需求读取接口的描述信息，来决定是否需要认证
 		Metadata(permission.Auth(true)).
+		Metadata(permission.Permission(true)).
 		Metadata(permission.Resource("user")).
 		Metadata(permission.Action("list")).
 		Param(restful.QueryParameter("page_size", "分页大小").DataType("integer")).
