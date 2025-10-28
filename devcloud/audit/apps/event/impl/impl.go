@@ -14,7 +14,7 @@ func init() {
 	ioc.Controller().Registry(&EventServiceImpl{})
 }
 
-// 业务具体实现
+// EventServiceImpl 业务具体实现
 type EventServiceImpl struct {
 	// 继承模板
 	ioc.ObjectImpl
@@ -26,12 +26,12 @@ type EventServiceImpl struct {
 	col *mongo.Collection
 }
 
-// 对象名称
+// Name 对象名称
 func (i *EventServiceImpl) Name() string {
 	return event.AppName
 }
 
-// 初始化
+// Init 初始化
 func (i *EventServiceImpl) Init() error {
 	// 对象
 	i.log = log.Sub(i.Name())

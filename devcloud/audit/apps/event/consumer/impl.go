@@ -38,12 +38,12 @@ type consumer struct {
 	Topics []string `toml:"topic" json:"topic" yaml:"topic"  env:"TOPIC"`
 }
 
-// 对象名称
+// Name 对象名称
 func (i *consumer) Name() string {
 	return "maudit_consumer"
 }
 
-// 初始化
+// Init 初始化
 func (i *consumer) Init() error {
 	// 对象
 	i.log = log.Sub(i.Name())

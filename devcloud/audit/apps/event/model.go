@@ -17,7 +17,7 @@ func NewEvent() *Event {
 	}
 }
 
-// 用户操作事件
+// Event 用户操作事件
 // 如何映射成 MongoDB BSON
 type Event struct {
 	// 事件Id

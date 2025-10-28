@@ -7,7 +7,7 @@ import (
 	"github.com/infraboard/modules/maudit/apps/event"
 )
 
-// 读取消息，处理消息, 使用同步方法, 会阻塞
+// Run 读取消息，处理消息, 使用同步方法, 会阻塞
 func (c *consumer) Run(ctx context.Context) error {
 	for {
 		m, err := c.reader.FetchMessage(ctx)

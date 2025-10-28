@@ -17,9 +17,9 @@ func GetService() Service {
 }
 
 type Service interface {
-	// 存储
+	// SaveEvent 存储
 	SaveEvent(context.Context, *types.Set[*Event]) error
-	// 查询
+	// QueryEvent 查询
 	QueryEvent(context.Context, *QueryEventRequest) (*types.Set[*Event], error)
 }
 

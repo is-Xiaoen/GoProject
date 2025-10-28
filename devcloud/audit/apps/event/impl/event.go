@@ -9,7 +9,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-// 存储
+// SaveEvent 存储
 func (s *EventServiceImpl) SaveEvent(ctx context.Context, in *types.Set[*event.Event]) error {
 	s.log.Debug().Msgf("events: %s", in)
 
@@ -20,6 +20,7 @@ func (s *EventServiceImpl) SaveEvent(ctx context.Context, in *types.Set[*event.E
 	return nil
 }
 
+// QueryEvent 存储
 func (s *EventServiceImpl) QueryEvent(ctx context.Context, in *event.QueryEventRequest) (*types.Set[*event.Event], error) {
 	set := types.NewSet[*event.Event]()
 
