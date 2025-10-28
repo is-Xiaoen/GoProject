@@ -58,7 +58,11 @@ func (i *consumer) Priority() int {
 	return event.PRIORITY - 1
 }
 
-func (i *consumer) Close(ctx context.Context) error {
+//func (i *consumer) Close(ctx context.Context) error {
+//	i.ctx.Done()
+//	return nil
+//}
+
+func (i *consumer) Close(ctx context.Context) {
 	i.ctx.Done()
-	return nil
 }
