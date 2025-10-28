@@ -3,8 +3,10 @@ package main
 import (
 	"github.com/infraboard/mcube/v2/ioc/server/cmd"
 
-	// mcter业务对象
+	// mcenter 业务对象
 	_ "github.com/is-Xiaoen/GoProject/devcloud/mcenter/apps"
+	// audit 业务对象
+	_ "github.com/is-Xiaoen/GoProject/devcloud/audit/apps"
 
 	// 非功能性模块
 	_ "github.com/infraboard/mcube/v2/ioc/apps/apidoc/restful"
