@@ -35,6 +35,8 @@ type Event struct {
 	// 做了什么操作, 服务:资源:动作
 	// 服务 <cmdb, mcenter, ....>
 	Service string `json:"service" bson:"service"`
+	// 哪个空间
+	Namespace string `json:"namespace" bson:"namespace"`
 	// 资源 <secret, user, namespace, ...>
 	ResourceType string `json:"resource_type" bson:"resource_type"`
 	// 动作 <list, get, update, create, delete, ....>

@@ -18,6 +18,7 @@
   endpoints = ["127.0.0.1:27017"]
   username = ""
   password = ""
+  database = "devcloud_go"
 
 [kafka]
   brokers = ["127.0.0.1:9092"]

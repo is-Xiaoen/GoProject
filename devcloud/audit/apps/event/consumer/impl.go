@@ -5,6 +5,7 @@ import (
 
 	"github.com/infraboard/mcube/v2/ioc"
 	"github.com/infraboard/mcube/v2/ioc/config/log"
+	"github.com/is-Xiaoen/GoProject/devcloud/audit/apps/event"
 	"github.com/rs/zerolog"
 
 	ioc_kafka "github.com/infraboard/mcube/v2/ioc/config/kafka"
@@ -51,6 +52,10 @@ func (i *consumer) Init() error {
 
 	go i.Run(i.ctx)
 	return nil
+}
+
+func (i *consumer) Priority() int {
+	return event.PRIORITY - 1
 }
 
 func (i *consumer) Close(ctx context.Context) error {

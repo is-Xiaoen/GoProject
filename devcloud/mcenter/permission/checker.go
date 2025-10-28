@@ -20,6 +20,10 @@ func init() {
 	ioc.Config().Registry(&Checker{})
 }
 
+func GetCheckerPriority() int {
+	return ioc.Config().Get("permission_checker").Priority()
+}
+
 func Auth(v bool) (string, bool) {
 	return endpoint.META_REQUIRED_AUTH_KEY, v
 }

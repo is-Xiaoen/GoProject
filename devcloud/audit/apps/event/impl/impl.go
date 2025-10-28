@@ -8,11 +8,16 @@ import (
 
 	ioc_mongo "github.com/infraboard/mcube/v2/ioc/config/mongo"
 	"go.mongodb.org/mongo-driver/mongo"
+
+	// 引入消费者
+	_ "github.com/is-Xiaoen/GoProject/devcloud/audit/apps/event/consumer"
 )
 
 func init() {
 	ioc.Controller().Registry(&EventServiceImpl{})
 }
+
+var _ event.Service = (*EventServiceImpl)(nil)
 
 // EventServiceImpl 业务具体实现
 type EventServiceImpl struct {
@@ -29,6 +34,10 @@ type EventServiceImpl struct {
 // Name 对象名称
 func (i *EventServiceImpl) Name() string {
 	return event.AppName
+}
+
+func (i *EventServiceImpl) Priority() int {
+	return event.PRIORITY
 }
 
 // Init 初始化

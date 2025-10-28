@@ -4,7 +4,8 @@ import (
 	"context"
 	"io"
 
-	"github.com/infraboard/modules/maudit/apps/event"
+	"github.com/infraboard/mcube/v2/types"
+	"github.com/is-Xiaoen/GoProject/devcloud/audit/apps/event"
 )
 
 // Run 读取消息，处理消息, 使用同步方法, 会阻塞
@@ -27,7 +28,7 @@ func (c *consumer) Run(ctx context.Context) error {
 		// 发送的数据时Json格式, 接收用的JSON, 发送也需要使用JSON
 		err = e.Load(m.Value)
 		if err == nil {
-			if err := event.GetService().SaveEvent(ctx, event.NewEventSet().Add(e)); err != nil {
+			if err := event.GetService().SaveEvent(ctx, types.NewSet[*event.Event]().Add(e)); err != nil {
 				c.log.Error().Msgf("save event error, %s", err)
 			}
 		}

@@ -5,6 +5,7 @@ import (
 	"github.com/emicklei/go-restful/v3"
 	"github.com/infraboard/mcube/v2/ioc"
 	"github.com/infraboard/mcube/v2/ioc/config/gorestful"
+	"github.com/is-Xiaoen/GoProject/devcloud/audit/audit"
 	"github.com/is-Xiaoen/GoProject/devcloud/mcenter/apps/user"
 	"github.com/is-Xiaoen/GoProject/devcloud/mcenter/permission"
 )
@@ -39,6 +40,7 @@ func (h *UserRestfulApiHandler) Init() error {
 		Metadata(permission.Permission(true)).
 		Metadata(permission.Resource("user")).
 		Metadata(permission.Action("list")).
+		Metadata(audit.Enable(true)).
 		Param(restful.QueryParameter("page_size", "分页大小").DataType("integer")).
 		Param(restful.QueryParameter("page_number", "页码").DataType("integer")).
 		Writes(Set{}).
