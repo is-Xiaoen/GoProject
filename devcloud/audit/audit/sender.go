@@ -13,7 +13,7 @@ import (
 // SendEvent 审计日志的发送逻辑
 func (a *EventSender) SendEvent() restful.FilterFunction {
 	return func(req *restful.Request, resp *restful.Response, fc *restful.FilterChain) {
-		sr := req.Request
+		sr := req.SelectedRoute()
 		md := NewMetaData(sr.Metadata())
 
 		// 开关打开 , 则开启审计
