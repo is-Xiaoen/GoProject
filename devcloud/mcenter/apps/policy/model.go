@@ -40,24 +40,23 @@ func (p *Policy) String() string {
 
 func NewCreatePolicyRequest() *CreatePolicyRequest {
 	return &CreatePolicyRequest{
+		ResourceScope: ResourceScope{
+			Scope: map[string]string{},
+		},
 		Extras:   map[string]string{},
-		Scope:    map[string]string{},
 		Enabled:  true,
 		ReadOnly: false,
 	}
 }
 
 type CreatePolicyRequest struct {
+	ResourceScope
 	// 创建者
 	CreateBy uint64 `json:"create_by" bson:"create_by" gorm:"column:create_by;type:uint" description:"创建者" optional:"true"`
-	// 空间
-	NamespaceId *uint64 `json:"namespace_id" bson:"namespace_id" gorm:"column:namespace_id;type:varchar(200);index" description:"策略生效的空间Id" optional:"true"`
 	// 用户Id
 	UserId uint64 `json:"user_id" bson:"user_id" gorm:"column:user_id;type:uint;not null;index" validate:"required" description:"被授权的用户"`
 	// 角色Id
-	RoleId uint64 `json:"role_id" bson:"role_id" gorm:"column:role_id;type:uint;not null;index" validate:"required" description:"被关联的角色"`
-	// 访问范围, 需要提前定义scope, 比如环境
-	Scope map[string]string `json:"scope" bson:"scope" gorm:"column:scope;serializer:json;type:json" description:"数据访问的范围" optional:"true"`
+	RoleId []uint64 `json:"role_id" bson:"role_id" gorm:"column:role_id;type:json;not null;serializer:json" validate:"required" description:"被关联的角色"`
 	// 策略过期时间
 	ExpiredTime *time.Time `json:"expired_time" bson:"expired_time" gorm:"column:expired_time;type:timestamp;index" description:"策略过期时间" optional:"true"`
 	// 只读策略, 不允许用户修改, 一般用于系统管理
@@ -68,6 +67,13 @@ type CreatePolicyRequest struct {
 	Label string `json:"label" gorm:"column:label;type:varchar(200);index" description:"策略标签" optional:"true"`
 	// 扩展信息
 	Extras map[string]string `json:"extras" bson:"extras" gorm:"column:extras;serializer:json;type:json" description:"扩展信息" optional:"true"`
+}
+
+type ResourceScope struct {
+	// 空间
+	NamespaceId *uint64 `json:"namespace_id" bson:"namespace_id" gorm:"column:namespace_id;type:varchar(200);index" description:"策略生效的空间Id" optional:"true"`
+	// 访问范围, 需要提前定义scope, 比如环境, 后端开发小组，开发资源
+	Scope map[string]string `json:"scope" bson:"scope" gorm:"column:scope;serializer:json;type:json" description:"数据访问的范围" optional:"true"`
 }
 
 func (r *CreatePolicyRequest) Validate() error {

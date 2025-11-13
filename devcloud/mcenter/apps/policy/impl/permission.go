@@ -51,7 +51,7 @@ func (i *PolicyServiceImpl) QueryEndpoint(ctx context.Context, in *policy.QueryE
 
 	roleReq := role.NewQueryMatchedEndpointRequest()
 	policies.ForEach(func(t *policy.Policy) {
-		roleReq.Add(t.RoleId)
+		roleReq.Add(t.RoleId...)
 	})
 
 	if policies.Len() > 0 {
