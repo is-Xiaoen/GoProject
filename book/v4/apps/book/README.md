@@ -273,7 +273,7 @@ func main() {
 200
 [GIN-debug] GET    /api/simple_api/v1/books  --> 122.51.31.227/go-course/go18/book/v4/apps/book/api.(*BookApiHandler).queryBook-fm (4 handlers)
 [GIN-debug] POST   /api/simple_api/v1/books  --> 122.51.31.227/go-course/go18/book/v4/apps/book/api.(*BookApiHandler).createBook-fm (4 handlers)
-2025-05-25T15:59:33+08:00 INFO   ioc/server/server.go:74 > loaded configs: [app.v1 trace.v1 log.v1 validator.v1 gin_webframework.v1 datasource.v1 grpc.v1 http.v1] component:SERVER
+2025-05-25T15:59:33+08:00 INFO   ioc/server/server.go:74 > loaded configs: [apps.v1 trace.v1 log.v1 validator.v1 gin_webframework.v1 datasource.v1 grpc.v1 http.v1] component:SERVER
 2025-05-25T15:59:33+08:00 INFO   ioc/server/server.go:75 > loaded controllers: [comment.v1 book.v1] component:SERVER
 2025-05-25T15:59:33+08:00 INFO   ioc/server/server.go:76 > loaded apis: [books.v1] component:SERVER
 2025-05-25T15:59:33+08:00 INFO   ioc/server/server.go:77 > loaded defaults: [] component:SERVER
@@ -314,7 +314,7 @@ func main() {
 [GIN-debug] POST   /api/simple_api/v1/books  --> 122.51.31.227/go-course/go18/book/v4/apps/book/api.(*BookApiHandler).createBook-fm (5 handlers)
 [GIN-debug] GET    /healthz/                 --> github.com/infraboard/mcube/v2/ioc/apps/health/gin.(*HealthChecker).HealthHandleFunc-fm (5 handlers)
 2025-05-25T16:06:42+08:00 INFO   health/gin/check.go:55 > Get the Health using http://127.0.0.1:8010/healthz component:HEALTH_CHECK
-2025-05-25T16:06:42+08:00 INFO   ioc/server/server.go:74 > loaded configs: [app.v1 trace.v1 log.v1 validator.v1 gin_webframework.v1 datasource.v1 grpc.v1 http.v1] component:SERVER
+2025-05-25T16:06:42+08:00 INFO   ioc/server/server.go:74 > loaded configs: [apps.v1 trace.v1 log.v1 validator.v1 gin_webframework.v1 datasource.v1 grpc.v1 http.v1] component:SERVER
 2025-05-25T16:06:42+08:00 INFO   ioc/server/server.go:75 > loaded controllers: [comment.v1 book.v1] component:SERVER
 2025-05-25T16:06:42+08:00 INFO   ioc/server/server.go:76 > loaded apis: [metric.v1 books.v1 health.v1] component:SERVER
 2025-05-25T16:06:42+08:00 INFO   ioc/server/server.go:77 > loaded defaults: [] component:SERVER

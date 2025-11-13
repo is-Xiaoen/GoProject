@@ -23,7 +23,7 @@ func Default() *Config {
 // 这个对象就是程序配置
 // yaml,toml
 type Config struct {
-	Application *application `toml:"app" yaml:"app" json:"app"`
+	Application *application `toml:"apps" yaml:"apps" json:"apps"`
 	MySQL       *mySQL       `toml:"mysql" yaml:"mysql" json:"mysql"`
 }
 
