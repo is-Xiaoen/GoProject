@@ -87,7 +87,7 @@ func toJsonArray(arr []string) string {
 	return string(b)
 }
 
-func (r ResourceScope) GormResourceFilter(query *gorm.DB) {
+func (r ResourceScope) GormResourceFilter(query *gorm.DB) *gorm.DB {
 	if r.NamespaceId != nil {
 		query = query.Where("namespace = ?", r.NamespaceId)
 	}
@@ -108,6 +108,7 @@ func (r ResourceScope) GormResourceFilter(query *gorm.DB) {
 			query = query.Where("label->>? IN (?)", "$."+key, values)
 		}
 	}
+	return query
 }
 
 func (r *CreatePolicyRequest) Validate() error {

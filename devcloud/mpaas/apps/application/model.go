@@ -20,7 +20,7 @@ func NewApplication(req CreateApplicationRequest) (*Application, error) {
 	}
 
 	// 动态计算评审状态
-	if len(req.Audits) > 0 {
+	if len(req.Audits) == 0 {
 		app.SetReady(true)
 	} else {
 		app.SetReady(false)
@@ -35,7 +35,7 @@ type Application struct {
 	// 对象Id
 	Id string `json:"id" bson:"_id" gorm:"column:id;primary_key"`
 	// 更新时间
-	UpdateAt time.Time `json:"update_at" bson:"update_at" gorm:"column:update_at"`
+	UpdateAt *time.Time `json:"update_at" bson:"update_at" gorm:"column:update_at"`
 	// 更新人
 	UpdateBy string `json:"update_by" bson:"update_by" gorm:"column:update_by"`
 	// 创建请求
@@ -72,6 +72,7 @@ func (a *Application) BuildId() {
 
 func NewCreateApplicationRequest() *CreateApplicationRequest {
 	return &CreateApplicationRequest{
+		CreateAt: time.Now(),
 		CreateApplicationSpec: CreateApplicationSpec{
 			Extras:          map[string]string{},
 			ImageRepository: []ImageRepository{},
@@ -116,7 +117,7 @@ type CreateApplicationSpec struct {
 	// 应用代码仓库信息
 	CodeRepository CodeRepository `json:"code_repository" bson:",inline" gorm:"embedded" description:"应用代码仓库信息"`
 	// 应用镜像仓库信息
-	ImageRepository []ImageRepository `json:"image_repository" gorm:"column:image_repository;serializer:json;" bson:"image_repository"  description:"应用镜像仓库信息"`
+	ImageRepository []ImageRepository `json:"image_repository" gorm:"column:image_repository;type:json;serializer:json;" bson:"image_repository"  description:"应用镜像仓库信息"`
 	// 应用所有者
 	Owner string `json:"owner" bson:"owner" gorm:"column:owner" description:"应用所有者"`
 	// 应用等级, 评估这个应用的重要程度
@@ -124,10 +125,10 @@ type CreateApplicationSpec struct {
 	// 应用优先级, 应用启动的先后顺序
 	Priority *uint32 `json:"priority" bson:"priority" gorm:"column:priority" description:"应用优先级, 应用启动的先后顺序"`
 	// 额外的其他属性
-	Extras map[string]string `json:"extras" form:"extras" bson:"extras" gorm:"column:extras;serializer:json;"`
+	Extras map[string]string `json:"extras" form:"extras" bson:"extras" gorm:"column:extras;type:json;serializer:json;"`
 
 	// 指定应用的评审方
-	Audits []ApplicationReadyAudit `json:"audits" bson:"audits" gorm:"column:audits;serializer:json" description:"参与应用准备就绪的评审方"`
+	Audits []ApplicationReadyAudit `json:"audits" bson:"audits" gorm:"column:audits;type:json;serializer:json" description:"参与应用准备就绪的评审方"`
 }
 
 // CodeRepository 服务代码仓库信息
@@ -155,7 +156,7 @@ type CodeRepository struct {
 	// scm设置Hook后返回的id, 用于删除应用时，取消hook使用
 	HookId string `json:"hook_id" bson:"hook_id" gorm:"column:hook_id"`
 	// 仓库的创建时间
-	CreatedAt time.Time `json:"created_at" bson:"created_at" gorm:"column:created_at"`
+	CreatedAt *time.Time `json:"created_at" bson:"created_at" gorm:"column:created_at"`
 }
 
 // ImageRepository 镜像仓库
@@ -170,10 +171,10 @@ type ApplicationStatus struct {
 	// 该应用是否已经准备就绪，多方确认的一个过程后计算出来的
 	Ready *bool `json:"ready" bson:"ready" gorm:"column:ready" description:"该应用是否已经准备就绪"`
 	// 就绪状态修改时间
-	UpdateAt time.Time `json:"ready_update_at" bson:"ready_update_at" gorm:"column:ready_update_at" description:"就绪状态修改时间"`
+	UpdateAt *time.Time `json:"ready_update_at" bson:"ready_update_at" gorm:"column:ready_update_at" description:"就绪状态修改时间"`
 }
 
-// 参与应用准备就绪的评审方
+// ApplicationReadyAudit 参与应用准备就绪的评审方
 type ApplicationReadyAudit struct {
 	// 评审角色, Dev, Test, Ops
 	RoleName string `json:"role_name"`
