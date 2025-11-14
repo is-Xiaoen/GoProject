@@ -7,6 +7,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/infraboard/mcube/v2/ioc/config/validator"
 	"github.com/infraboard/mcube/v2/tools/pretty"
+	"github.com/is-Xiaoen/GoProject/devcloud/mcenter/apps/policy"
 )
 
 func NewApplication(req CreateApplicationRequest) (*Application, error) {
@@ -72,7 +73,6 @@ func (a *Application) BuildId() {
 func NewCreateApplicationRequest() *CreateApplicationRequest {
 	return &CreateApplicationRequest{
 		CreateApplicationSpec: CreateApplicationSpec{
-			Labels:          map[string]string{},
 			Extras:          map[string]string{},
 			ImageRepository: []ImageRepository{},
 		},
@@ -84,8 +84,8 @@ type CreateApplicationRequest struct {
 	CreateBy string `json:"create_by" bson:"create_by" gorm:"column:create_by" description:"创建人"`
 	// 创建时间
 	CreateAt time.Time `json:"create_at" bson:"create_at" gorm:"column:create_at" description:"创建时间"`
-	// 应用所属空间名称
-	Namespace string `json:"namespace" bson:"namespace" description:"应用所属空间名称" gorm:"column:namespace"`
+	// 资源范围, Namespace是继承的, Scope是API添加的
+	policy.ResourceLabel
 	// 应用创建参数
 	CreateApplicationSpec
 }
@@ -123,8 +123,6 @@ type CreateApplicationSpec struct {
 	Level *uint32 `json:"level" bson:"level" gorm:"column:level" description:"应用等级, 评估这个应用的重要程度"`
 	// 应用优先级, 应用启动的先后顺序
 	Priority *uint32 `json:"priority" bson:"priority" gorm:"column:priority" description:"应用优先级, 应用启动的先后顺序"`
-	// 应用标签
-	Labels map[string]string `json:"labels" bson:"labels" gorm:"column:labels;serializer:json" description:"应用标签"`
 	// 额外的其他属性
 	Extras map[string]string `json:"extras" form:"extras" bson:"extras" gorm:"column:extras;serializer:json;"`
 

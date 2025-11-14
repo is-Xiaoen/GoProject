@@ -1,14 +1,18 @@
 package policy
 
 import (
+	"encoding/json"
+	"fmt"
 	"time"
 
+	"github.com/infraboard/mcube/v2/ioc/config/datasource"
 	"github.com/infraboard/mcube/v2/ioc/config/validator"
 	"github.com/infraboard/mcube/v2/tools/pretty"
 	"github.com/infraboard/modules/iam/apps"
 	"github.com/is-Xiaoen/GoProject/devcloud/mcenter/apps/namespace"
 	"github.com/is-Xiaoen/GoProject/devcloud/mcenter/apps/role"
 	"github.com/is-Xiaoen/GoProject/devcloud/mcenter/apps/user"
+	"gorm.io/gorm"
 )
 
 func NewPolicy() *Policy {
@@ -41,7 +45,7 @@ func (p *Policy) String() string {
 func NewCreatePolicyRequest() *CreatePolicyRequest {
 	return &CreatePolicyRequest{
 		ResourceScope: ResourceScope{
-			Scope: map[string]string{},
+			Scope: map[string][]string{},
 		},
 		Extras:   map[string]string{},
 		Enabled:  true,
@@ -69,11 +73,41 @@ type CreatePolicyRequest struct {
 	Extras map[string]string `json:"extras" bson:"extras" gorm:"column:extras;serializer:json;type:json" description:"扩展信息" optional:"true"`
 }
 
+// ResourceScope 资源需要组合ResourceLabel使用
 type ResourceScope struct {
 	// 空间
 	NamespaceId *uint64 `json:"namespace_id" bson:"namespace_id" gorm:"column:namespace_id;type:varchar(200);index" description:"策略生效的空间Id" optional:"true"`
 	// 访问范围, 需要提前定义scope, 比如环境, 后端开发小组，开发资源
-	Scope map[string]string `json:"scope" bson:"scope" gorm:"column:scope;serializer:json;type:json" description:"数据访问的范围" optional:"true"`
+	Scope map[string][]string `json:"scope" bson:"scope" gorm:"column:scope;serializer:json;type:json" description:"数据访问的范围" optional:"true"`
+}
+
+// 辅助函数：将字符串切片转换为 JSON 数组字符串
+func toJsonArray(arr []string) string {
+	b, _ := json.Marshal(arr)
+	return string(b)
+}
+
+func (r ResourceScope) GormResourceFilter(query *gorm.DB) {
+	if r.NamespaceId != nil {
+		query = query.Where("namespace = ?", r.NamespaceId)
+	}
+
+	switch datasource.Get().Provider {
+	case datasource.PROVIDER_POSTGRES:
+		for key, values := range r.Scope {
+			for k, v := range r.Scope {
+				// 创建一个临时 JSON 对象 {"key": ["value1", "value2"]}
+				jsonCondition := fmt.Sprintf(`{"%s": %s}`, k, toJsonArray(v))
+				query = query.Where("label @> ?", jsonCondition)
+			}
+			query = query.Where("label -->>? IN ?", key, values)
+		}
+	case datasource.PROVIDER_MYSQL:
+		// 过滤条件, Label
+		for key, values := range r.Scope {
+			query = query.Where("label->>? IN (?)", "$."+key, values)
+		}
+	}
 }
 
 func (r *CreatePolicyRequest) Validate() error {
@@ -83,4 +117,11 @@ func (r *CreatePolicyRequest) Validate() error {
 func (r *CreatePolicyRequest) SetNamespaceId(namespaceId uint64) *CreatePolicyRequest {
 	r.NamespaceId = &namespaceId
 	return r
+}
+
+type ResourceLabel struct {
+	// 空间
+	NamespaceId *uint64 `json:"namespace_id" bson:"namespace_id" gorm:"column:namespace_id;type:varchar(200);index" description:"策略生效的空间Id" optional:"true"`
+	// 访问范围, 需要提前定义scope, 比如环境, 后端开发小组，开发资源
+	Label map[string]string `json:"label" bson:"label" gorm:"column:label;serializer:json;type:json" description:"数据访问的范围" optional:"true"`
 }

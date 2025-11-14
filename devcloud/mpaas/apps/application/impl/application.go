@@ -38,6 +38,8 @@ func (i *ApplicationServiceImpl) QueryApplication(ctx context.Context, in *appli
 		query = query.Where("ready = ?", *in.Ready)
 	}
 
+	in.GormResourceFilter(query)
+
 	err := query.Count(&set.Total).Error
 	if err != nil {
 		return nil, err
